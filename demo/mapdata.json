@@ -1,0 +1,13 @@
+{
+    "index": "index",
+    "startY": 16,
+    "startX": 11,
+    "rooms": {
+        "index": {
+            "path": "index/room.room",
+            "tileset": "index/tileset.json",
+            "loadScript": "index/scripts/load.script",
+            "visibleRange": 10
+        }
+    }
+}
