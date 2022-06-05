@@ -2,7 +2,9 @@
 
 #include <fstream>
 
+#include "scripting/overseer.hpp"
 #include "util.hpp"
+#include "../util.hpp"
 
 using std::string;
 
@@ -21,14 +23,14 @@ namespace game {
 
         }
 
-        void load(const string parentDir, const string path) {
-            auto j = fs::readJS(fs::pathJoin(vector<string>{parentDir, path}));
+        void load(const string parentDir, const string path, const scripting::ScriptOverseer* so) {
+            auto j = fs::readJS(fs::join(vector<string>{parentDir, path}));
             try {
                 // assign values
                 this->name = j["name"];
             }
             catch (nlohmann::detail::type_error er) {
-                throw std::runtime_error("failed loading game info");
+                throw std::runtime_error(er.what());
             }
         }
 

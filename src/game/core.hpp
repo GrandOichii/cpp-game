@@ -4,8 +4,9 @@
 #include <vector>
 
 #include "gameInfo.hpp"
-#include "mapData.hpp"
-#include "util.hpp"
+#include "map/map.hpp"
+#include "scripting/overseer.hpp"
+#include "../util.hpp"
 
 using std::string;
 using std::vector;
@@ -19,12 +20,14 @@ namespace game {
 
     class Game {
     private:
+        scripting::ScriptOverseer* scriptOverseer;
         GameInfo* gameInfo;
-        MapData* mapData;
+        map::MapData* mapData;
     public:
         Game(const char* path) {
+            this->scriptOverseer = new scripting::ScriptOverseer();
             this->gameInfo = new GameInfo();
-            this->mapData = new MapData();
+            this->mapData = new map::MapData();
             auto p = string(path);
 
             // load info
@@ -33,11 +36,12 @@ namespace game {
                 {MAPDATA_FILE, mapData}
             };
             for (auto it = loadMap.begin(); it != loadMap.end(); it++) {
-                it->second->load(p, it->first.c_str());
+                it->second->load(p, it->first.c_str(), this->scriptOverseer);
             }
         }
 
         ~Game() {
+            delete scriptOverseer;
             delete gameInfo;
             delete mapData;
         }
@@ -47,5 +51,4 @@ namespace game {
             this->mapData->print();
         }
     };
-
 }
