@@ -17,9 +17,9 @@ public:
         for (const auto& item : tiles.items()) {
             auto key = item.key();
             auto p = item.value();
-            tileMap[key] = this->loadImage(fs::join(assetsPath, p).c_str());
+            tileMap[key] = this->loadTile(fs::join(assetsPath, p).c_str());
         }
-        this->player = this->loadImage(fs::join(assetsPath, j["player"]).c_str());
+        this->player = this->loadTile(fs::join(assetsPath, j["player"]).c_str());
     }
 
     ~AssetsManager() {
@@ -28,7 +28,8 @@ public:
             SDL_DestroyTexture(it->second);
     }
 
-    SDL_Texture *loadImage(const char* path) {
+    SDL_Texture *loadTile(const char* path) {
+        // std::cout << "Loading " << path << std::endl << ren << std::endl;
         SDL_Surface *bmp = SDL_LoadBMP(path);
         if (bmp == nullptr){
             std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;

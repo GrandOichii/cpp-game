@@ -6,6 +6,8 @@ project(game)
 
 file(GLOB srcFiles 
     src/*.cpp 
+    src/window/window.cpp
+    src/window/wrapper.cpp
     src/game/scripting/*.cpp 
     src/game/map/*.cpp
 )
