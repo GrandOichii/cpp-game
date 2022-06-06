@@ -13,7 +13,9 @@ namespace game {
     private:
         string name;
     public:
-        string getName() { return name; }
+        string getName() const { 
+            return name;
+        }
 
         GameInfo() {
             name = "";

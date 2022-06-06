@@ -14,6 +14,35 @@ using std::string;
 namespace game {
 namespace map {
 
+bool MapData::movePlayer(const Double mpair) {
+    auto a = mpair.a;
+    auto height = this->currentRoom->getHeight();
+    auto width = this->currentRoom->getWidth();
+    int newX = this->playerX + a[0];
+    int newY = this->playerY + a[1];
+    if (newX < 0 || newY < 0 || newX >= width || newY >= height) return false;
+
+    auto tile = this->currentRoom->getLayout()[newY][newX];
+    if (!tile->isPassable()) {
+        return false;
+    }
+    this->playerX = newX;
+    this->playerY = newY;
+    return false;
+}
+
+Room* MapData::getCurrentRoom() const {
+    return this->currentRoom;
+}
+
+unsigned int MapData::getPlayerY() const {
+    return this->playerY;
+}
+
+unsigned int MapData::getPlayerX() const {
+    return this->playerX;
+}
+
 MapData::MapData() {
 
 }

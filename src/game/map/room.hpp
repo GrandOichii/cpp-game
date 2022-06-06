@@ -5,6 +5,12 @@
 namespace game {
 namespace map {
 
+struct RoomPos {
+    int x;
+    int y;
+    string name;
+};
+
 class Room {
 private:
     unsigned int height;
@@ -19,6 +25,11 @@ private:
 public:
     Room(string name, unsigned int visibleRange);
     ~Room();
+    int getVisibleRange() const;
+    string getName() const;
+    unsigned int getHeight() const;
+    unsigned int getWidth() const;
+    Tile*** getLayout() const;
     void loadTilesetFrom(const string path);
     void loadLayoutFrom(const string path);
     void loadLoadScriptFrom(const string path);

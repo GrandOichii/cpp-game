@@ -54,6 +54,11 @@ namespace fs {
         return str::join(dirs.begin(), dirs.end(), "/");
     }
 
+    string join(const string d1, const string d2) {
+        return join(vector<string>{d1, d2});
+    }
+
+
     string readFile(const char* path) {
         string line;
         std::ifstream in(path);

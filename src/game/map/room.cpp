@@ -9,6 +9,26 @@ using std::string;
 namespace game {
 namespace map {
 
+int Room::getVisibleRange() const {
+    return this->visibleRange;
+}
+
+Tile*** Room::getLayout() const {
+    return this->layout;
+}
+
+unsigned int Room::getHeight() const {
+    return this->height;
+}
+
+unsigned int Room::getWidth() const {
+    return this->width;
+}
+
+string Room::getName() const {
+    return this->name;
+}
+
 Room::Room(string name, unsigned int visibleRange) : name(name), visibleRange(visibleRange) {
     
 }

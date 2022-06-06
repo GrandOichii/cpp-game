@@ -11,6 +11,10 @@
 using std::string;
 using std::vector;
 
+struct Double {
+    int a[2];
+};
+
 namespace str {
     template<typename ... Args>
     std::string format( const std::string& format, Args ... args )
@@ -35,6 +39,8 @@ namespace fs {
     nlohmann::json readJS(const string path);
 
     string join(const vector<string> dirs);
+
+    string join(const string d1, const string d2);
 
     string readFile(const char* path);
 
