@@ -98,8 +98,8 @@ namespace game {
             for (int i = 0; i < RAY_AMOUNT; i++) {
                 double r = rayRadOf(i);
                 for (float n = 0; n < vr; n++) {
-                    int newY = this->centerY + sin(r) * n;
-                    int newX = this->centerX + cos(r) * n;
+                    int newY = this->centerY + int(sin(r) * n);
+                    int newX = this->centerX + int(cos(r) * n);
                     if (newY > windowHeight || newX > windowWidth){
                         break;
                     }
