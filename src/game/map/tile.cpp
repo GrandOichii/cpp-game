@@ -9,15 +9,15 @@ using std::string;
 namespace game {
 namespace map {
 
-bool Tile::isPassable() { 
+bool Tile::isPassable() const { 
     return passable; 
 }
 
-bool Tile::isTransparent() { 
+bool Tile::isTransparent() const { 
     return transparent; 
 }
 
-string Tile::getName() { 
+string Tile::getName() const { 
     return name; 
 }
 
@@ -37,7 +37,7 @@ void Tile::setCh(const string ch) {
     this->ch = ch; 
 }
 
-string Tile::getCh() { 
+string Tile::getCh() const { 
     return this->ch; 
 }
 

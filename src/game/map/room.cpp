@@ -53,7 +53,6 @@ void Room::loadLayoutFrom(const string path) {
         this->layout[i] = new Tile*[this->width];
         for (int ii = 0; ii < this->width; ii++) {
             this->layout[i][ii] = this->tileWithCh(lines[i][ii]);
-            // this->layout[i][ii] = nullptr;
         }
     }
 }

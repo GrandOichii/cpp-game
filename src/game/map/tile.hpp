@@ -21,13 +21,13 @@ private:
     scripting::Script* stepScript = nullptr;
 
 public:
-    bool isPassable();
-    bool isTransparent();
-    string getName();
+    bool isPassable() const;
+    bool isTransparent() const;
+    string getName() const;
     Tile(nlohmann::json j);
     ~Tile();
     void setCh(const string ch);
-    string getCh();
+    string getCh() const;
     void print(const char* prefix);
 };
 

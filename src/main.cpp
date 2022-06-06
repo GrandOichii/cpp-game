@@ -1,7 +1,7 @@
-#include "terminal/wrapper.hpp"
+#include "game/core.hpp"
 
 int main() {
-	auto wrapper = new Wrapper("demo");
-	wrapper->start();
-	delete wrapper;
+	auto game = new game::Game("demo");
+	game->print();
+	delete game;
 }
