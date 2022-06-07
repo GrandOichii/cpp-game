@@ -2,6 +2,9 @@
 
 #include <string>
 
+#include "map.hpp"
+#include "../scripting/overseer.hpp"
+#include "../scripting/script.hpp"
 #include "../../util.hpp"
 
 using std::string;
@@ -29,9 +32,7 @@ string Room::getName() const {
     return this->name;
 }
 
-Room::Room(string name, unsigned int visibleRange) : name(name), visibleRange(visibleRange) {
-    
-}
+Room::Room(string name, unsigned int visibleRange) : name(name), visibleRange(visibleRange) {}
 
 Room::~Room() {
     for (int i = 0; i < tileCount; i++) {
@@ -50,20 +51,20 @@ Tile* Room::tileWithCh(const char ch) {
     throw std::runtime_error(str::format("no tile with ch %c", ch));
 }
 
-void Room::loadTilesetFrom(const string path) {
+void Room::loadTilesetFrom(const string path, scripting::ScriptOverseer* so) {
     auto j = fs::readJS(path);
     this->tileCount = j.size();
     this->tiles = new Tile*[this->tileCount];
     int i = 0;
     for (auto item : j.items()) {
         string ch = item.key();
-        tiles[i] = new Tile(item.value());
+        tiles[i] = new Tile(item.value(), fs::dirOf(path), so);
         tiles[i]->setCh(ch);
         i++;
     }
 }
 
-void Room::loadLayoutFrom(const string path) {
+void Room::loadLayoutFrom(const string path, MapData * map) {
     // TODO
     auto lines = fs::readAllLines(path.c_str());
     this->height = lines.size();
@@ -72,13 +73,17 @@ void Room::loadLayoutFrom(const string path) {
     for (int i = 0; i < this->height; i++) {
         this->layout[i] = new Tile*[this->width];
         for (int ii = 0; ii < this->width; ii++) {
-            this->layout[i][ii] = this->tileWithCh(lines[i][ii]);
+            auto tile = this->tileWithCh(lines[i][ii]);
+            this->layout[i][ii] = tile;
+            auto warpCode = tile->getWarpCode();
+            if (warpCode == "") continue;
+            map->addWarpCode(warpCode, i, ii, this->name);   
         }
     }
 }
 
-void Room::loadLoadScriptFrom(const string path) {
-    // TODO
+void Room::loadLoadScriptFrom(const string path, scripting::ScriptOverseer* so) {
+    this->loadScript = new scripting::Script(path.c_str(), so);
 }
 
 void Room::print(const char* prefix) {
@@ -94,6 +99,11 @@ void Room::print(const char* prefix) {
             cout << (layout[i][ii]->isPassable() ? " " : "#") << " ";
         cout << endl;
     }
+}
+
+void Room::executeLoadScript() {
+    if (this->loadScript == nullptr) return;
+    this->loadScript->exec();
 }
 
 

@@ -1,9 +1,14 @@
 #pragma once
 
+#include <map>
+
 #include "tile.hpp"
+#include "../scripting/overseer.hpp"
 
 namespace game {
 namespace map {
+
+class MapData;
 
 struct RoomPos {
     int x;
@@ -30,10 +35,11 @@ public:
     unsigned int getHeight() const;
     unsigned int getWidth() const;
     Tile*** getLayout() const;
-    void loadTilesetFrom(const string path);
-    void loadLayoutFrom(const string path);
-    void loadLoadScriptFrom(const string path);
+    void loadTilesetFrom(const string path, scripting::ScriptOverseer* so);
+    void loadLayoutFrom(const string path, MapData * map);
+    void loadLoadScriptFrom(const string path, scripting::ScriptOverseer* so);
     void print(const char* prefix);
+    void executeLoadScript();
 };
 
 }

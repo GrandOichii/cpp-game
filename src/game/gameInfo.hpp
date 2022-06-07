@@ -25,7 +25,7 @@ namespace game {
 
         }
 
-        void load(const string parentDir, const string path, const scripting::ScriptOverseer* so) {
+        void load(const string parentDir, const string path, scripting::ScriptOverseer* so) {
             auto j = fs::readJS(fs::join(vector<string>{parentDir, path}));
             try {
                 // assign values

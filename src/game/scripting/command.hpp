@@ -1,19 +1,23 @@
 #pragma once
 
 #include "object.hpp"
+#include "overseer.hpp"
 
 namespace game {
 namespace scripting {
 
+using func = std::function<void(ScriptOverseer*, SObject**, int)>;
+
 class Command {
 private:
-    // func f;
+    func f;
     SObject** args;
-    unsigned int argc;
+    int argc;
+    ScriptOverseer* so;
 public:
-    Command();
+    Command(std::string line, ScriptOverseer* so);
     ~Command();
-    void run();
+    void exec();
 };
 
 }

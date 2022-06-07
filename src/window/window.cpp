@@ -76,6 +76,5 @@ void Window::start() {
 }
 
 void Window::close() {
-    std::cout << "Closed\n";
     this->running = false;
 }

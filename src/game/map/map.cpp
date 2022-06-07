@@ -3,11 +3,11 @@
 #include <map>
 #include <string>
 
-#include "../scripting/script.hpp"
-#include "../scripting/overseer.hpp"
-#include "../../nlohmann/json.hpp"
 #include "../util.hpp"
 #include "../../util.hpp"
+#include "../../nlohmann/json.hpp"
+#include "../scripting/script.hpp"
+#include "../scripting/overseer.hpp"
 
 using std::string;
 
@@ -21,14 +21,13 @@ bool MapData::movePlayer(const Double mpair) {
     int newX = this->playerX + a[0];
     int newY = this->playerY + a[1];
     if (newX < 0 || newY < 0 || newX >= width || newY >= height) return false;
-
     auto tile = this->currentRoom->getLayout()[newY][newX];
     if (!tile->isPassable()) {
         return false;
     }
     this->playerX = newX;
     this->playerY = newY;
-    return false;
+    return true;
 }
 
 Room* MapData::getCurrentRoom() const {
@@ -52,7 +51,7 @@ MapData::~MapData() {
         delete it->second;
 }
 
-void MapData::load(const string parentDir, const string path, const scripting::ScriptOverseer* so) {
+void MapData::load(const string parentDir, const string path, scripting::ScriptOverseer* so) {
     auto j = fs::readJS(fs::join(vector<string>{parentDir, path}));
     try {
         // assign values
@@ -69,13 +68,15 @@ void MapData::load(const string parentDir, const string path, const scripting::S
             Room* room = new Room(roomName, vr);
             // load tile set
             string tilesetPath = values["tileset"];
-            room->loadTilesetFrom(fs::join(vector<string>{parentDir, tilesetPath}));
+            room->loadTilesetFrom(fs::join(vector<string>{parentDir, tilesetPath}), so);
             // load room layout
             string layoutPath = values["path"];
-            room->loadLayoutFrom(fs::join(vector<string>{parentDir, layoutPath}));
+            room->loadLayoutFrom(fs::join(vector<string>{parentDir, layoutPath}), this);
             // load load script
-            string scriptPath = values["loadScript"];
-            room->loadLoadScriptFrom(fs::join(vector<string>{parentDir, scriptPath}));
+            if (values.contains("loadScript")) {
+                string scriptPath = values["loadScript"];
+                room->loadLoadScriptFrom(fs::join(vector<string>{parentDir, scriptPath}), so);
+            }
             roomMap[roomName] = room;
         }
 
@@ -97,6 +98,24 @@ void MapData::print() {
         if (it->second == currentRoom) cout << "\t\t(Current room)" << endl;
         it->second->print("\t\t");
     }
+}
+
+void MapData::addWarpCode(string warpCode, int y, int x, string name) {
+    auto it = this->warpMap.find(warpCode);
+    if (it != this->warpMap.end()) throw std::runtime_error("warp code " + warpCode + " redefined");
+    this->warpMap[warpCode] = RoomPos{x, y, name};
+}
+
+void MapData::useWarpCode(string code) {
+    std::cout << "Using warp code " << code << std::endl;
+    auto it1 = this->warpMap.find(code);
+    if (it1 == warpMap.end()) throw std::runtime_error("unknown warpcode " + code);
+    auto loc = it1->second;
+    auto it2 = this->roomMap.find(loc.name);
+    if (it2 == this->roomMap.end()) throw std::runtime_error("critical error: bad warpcode " + code + " (room " + loc.name + " not found");
+    this->currentRoom = it2->second;
+    this->playerX = loc.x;
+    this->playerY = loc.y;
 }
 
 }

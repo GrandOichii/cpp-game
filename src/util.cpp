@@ -4,14 +4,56 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <iterator>
 
 #include "nlohmann/json.hpp"
 
 using std::string;
 using std::vector;
 
+bool isNumber(string word) {
+    for (const auto& c : word) if (!std::isdigit(c)) return false;
+    return true;
+}
+
 namespace str {
+    // trim from start (in place)
+    void ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }));
+    }
+
+    // trim from end (in place)
+    void rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+            return !std::isspace(ch);
+        }).base(), s.end());
+    }
+
+    // trim from both ends (in place)
+    void trim(std::string &s) {
+        ltrim(s);
+        rtrim(s);
+    }
+
+    // trim from start (copying)
+    std::string ltrim_copy(std::string s) {
+        ltrim(s);
+        return s;
+    }
+
+    // trim from end (copying)
+    std::string rtrim_copy(std::string s) {
+        rtrim(s);
+        return s;
+    }
+
+    // trim from both ends (copying)
+    std::string trim_copy(std::string s) {
+        trim(s);
+        return s;
+    }
+
 
     template <class InputIt>
     string join(InputIt begin, const InputIt end, const string delimiter) {
@@ -38,8 +80,9 @@ namespace str {
     }
 }
 
-
 namespace fs {
+
+    const string PATH_DELIMITER = "/";
 
     nlohmann::json readJS(const string path) {
         std::ifstream in(path);
@@ -51,13 +94,12 @@ namespace fs {
     }
 
     string join(const vector<string> dirs) {
-        return str::join(dirs.begin(), dirs.end(), "/");
+        return str::join(dirs.begin(), dirs.end(), PATH_DELIMITER);
     }
 
     string join(const string d1, const string d2) {
         return join(vector<string>{d1, d2});
     }
-
 
     string readFile(const char* path) {
         string line;
@@ -76,6 +118,16 @@ namespace fs {
     vector<string> readAllLines(const char* path) {
         auto text = readFile(path);
         return str::split(text, "\n");
+    }
+
+    string dirOf(const string path) {
+        string directory;
+        const size_t last_slash_idx = path.rfind(PATH_DELIMITER);
+        if (std::string::npos != last_slash_idx)
+        {
+            return path.substr(0, last_slash_idx);
+        }
+        throw std::runtime_error("can't extract directory from file " + path);
     }
 
 }

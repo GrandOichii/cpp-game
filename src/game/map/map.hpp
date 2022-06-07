@@ -3,10 +3,9 @@
 #include <map>
 #include <string>
 
-#include "../scripting/script.hpp"
 #include "../scripting/overseer.hpp"
-#include "../util.hpp"
 #include "../../util.hpp"
+#include "../util.hpp"
 #include "room.hpp"
 
 using std::string;
@@ -20,6 +19,7 @@ private:
     unsigned int playerX;
     std::map<string, Room*> roomMap;
     Room* currentRoom;
+    std::map<string, RoomPos> warpMap;
 public:
     Room* getCurrentRoom() const;
     bool movePlayer(const Double mpair);
@@ -27,8 +27,10 @@ public:
     unsigned int getPlayerX() const;
     MapData();
     ~MapData();
-    void load(const string parentDir, const string path, const scripting::ScriptOverseer* so);
+    void load(const string parentDir, const string path, scripting::ScriptOverseer* so);
     void print();
+    void addWarpCode(string warpCode, int y, int x, string name);   
+    void useWarpCode(string code);
 };
 
 }

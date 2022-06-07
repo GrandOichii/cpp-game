@@ -15,7 +15,21 @@ struct Double {
     int a[2];
 };
 
+bool isNumber(string word);
+
 namespace str {
+    void ltrim(std::string &s);
+
+    void rtrim(std::string &s);
+
+    void trim(std::string &s);
+
+    std::string ltrim_copy(std::string s);
+
+    std::string rtrim_copy(std::string s);
+
+    std::string trim_copy(std::string s);
+
     template<typename ... Args>
     std::string format( const std::string& format, Args ... args )
     {
@@ -45,5 +59,7 @@ namespace fs {
     string readFile(const char* path);
 
     vector<string> readAllLines(const char* path);
+
+    string dirOf(const string path);
 
 }

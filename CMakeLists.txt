@@ -6,10 +6,10 @@ project(game)
 
 file(GLOB srcFiles 
     src/*.cpp 
-    src/window/window.cpp
-    src/window/wrapper.cpp
-    src/game/scripting/*.cpp 
+    src/window/*.cpp
+    src/game/*.cpp
     src/game/map/*.cpp
+    src/game/scripting/*.cpp 
 )
 
 add_executable(${PROJECT_NAME}

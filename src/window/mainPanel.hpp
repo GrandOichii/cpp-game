@@ -27,6 +27,7 @@ public:
     MainPanel(Wrapper *parent) : Context(parent) {
         this->assets = parent->getAssets();
         this->game = parent->getGame();
+        this->updateGame = true;
     }
     
     ~MainPanel() {
@@ -36,6 +37,9 @@ public:
     void draw() {
         this->drawTiles();
         this->drawPlayer();
+        // update game
+        if (this->updateGame) this->game->update();
+        this->updateGame = false;
     }
 
     void drawTiles() {
@@ -65,27 +69,22 @@ public:
         switch (key) {
         case ('f'):
             this->parent->toggleFullscreen();
-            updateGame = false;
             return;
         case ('i'):
             this->inventoryMode();
             // change if item usage makes the game update
-            updateGame = false;
             return;
         case ('c'):
             this->spellCastMode();
             // change if casting spells makes the game update
-            updateGame = false;
             return;
         case ('~'):
             this->consoleCommandMode();
-            updateGame = false;
             return;
         case (SDLK_ESCAPE):
+            this->parent->close();
             return;
         }
-        updateGame = false;
-        return;
     }
 
     void inventoryMode() {

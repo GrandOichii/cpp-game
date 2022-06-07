@@ -31,6 +31,7 @@ void Wrapper::setup() {
     SDL_FreeSurface(icon);
     auto tilePanel = new MainPanel(this);
     this->setCurrentContext(tilePanel);
+    this->game->start();
 }
 
 AssetsManager * Wrapper::getAssets() const {
