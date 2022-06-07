@@ -14,9 +14,6 @@ const string GAME_INFO_FILE = "game_info.json";
 const string ITEMS_FILE = "items.json";
 const string MAPDATA_FILE = "mapdata.json";
 
-
-
-
 Game::Game(const char* path) {
     this->scriptOverseer = new scripting::ScriptOverseer(this);
     this->gameInfo = new GameInfo();
