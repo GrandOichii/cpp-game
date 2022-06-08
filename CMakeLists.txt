@@ -26,7 +26,7 @@ target_include_directories(${PROJECT_NAME}
     
 target_link_directories(${PROJECT_NAME} 
     PRIVATE external/SDL/src
-    PRIVATE external/SDL_ttd
+    PRIVATE external/SDL_ttf
 )
 
 target_link_libraries(${PROJECT_NAME}

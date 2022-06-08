@@ -34,6 +34,8 @@ public:
     string getName() const;
     unsigned int getHeight() const;
     unsigned int getWidth() const;
+    int getTileSetSize();
+    Tile** getTileSet() const;
     Tile*** getLayout() const;
     void loadTilesetFrom(const string path, scripting::ScriptOverseer* so);
     void loadLayoutFrom(const string path, MapData * map);

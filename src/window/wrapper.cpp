@@ -7,7 +7,9 @@
 #include "mainPanel.hpp"
 #include "../game/core.hpp"
 
-Wrapper::Wrapper(std::string path, std::string assetsPath) : Window() {
+
+
+Wrapper::Wrapper(std::string path, std::string assetsPath) : Window(WINDOW_WIDTH, WINDOW_HEIGHT) {
     this->game = new game::Game(path.c_str());
     this->game->setWindowSize(TILE_COUNT_X, TILE_COUNT_Y);
     this->title = this->game->getInfo()->getName().c_str();
@@ -31,6 +33,7 @@ void Wrapper::setup() {
     SDL_FreeSurface(icon);
     auto tilePanel = new MainPanel(this);
     this->setCurrentContext(tilePanel);
+    this->game->setWrapper(tilePanel);
     this->game->start();
 }
 

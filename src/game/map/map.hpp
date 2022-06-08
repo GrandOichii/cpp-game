@@ -22,6 +22,7 @@ private:
     std::map<string, RoomPos> warpMap;
 public:
     Room* getCurrentRoom() const;
+    std::map<string, Room*> getRoomMap() const;
     bool movePlayer(const Double mpair);
     unsigned int getPlayerY() const;
     unsigned int getPlayerX() const;

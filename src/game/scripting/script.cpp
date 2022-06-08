@@ -29,7 +29,7 @@ Script::Script(std::vector<std::string> lines, ScriptOverseer* so) {
             while (lines[endI] != "}") {
                 endI++;
             }
-            std::vector<string> macroLines = {lines.begin() + i + 1, lines.begin() + endI - 1};
+            std::vector<string> macroLines = {lines.begin() + i + 1, lines.begin() + endI};
             auto script = new Script(macroLines, so);
             so->addMacro(macroName, script);
             i = endI;
@@ -44,10 +44,15 @@ Script::~Script() {
 }
 
 void Script::exec() {
+    int i = 0;
+    std::cout << "(todo: " << commands.size() << ")" << std::endl;
     for (const auto command : commands) {
+        std::cout << "\texecuting ( " << i << " )" << std::endl;
         command->exec();
+        std::cout << "\tfinished ( " << i << " )" << std::endl;
+        i++;
     }
-}
+}  
 
 }
 }

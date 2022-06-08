@@ -34,6 +34,11 @@ Room* MapData::getCurrentRoom() const {
     return this->currentRoom;
 }
 
+std::map<string, Room*> MapData::getRoomMap() const {
+    return this->roomMap;
+}
+
+
 unsigned int MapData::getPlayerY() const {
     return this->playerY;
 }
@@ -107,7 +112,6 @@ void MapData::addWarpCode(string warpCode, int y, int x, string name) {
 }
 
 void MapData::useWarpCode(string code) {
-    std::cout << "Using warp code " << code << std::endl;
     auto it1 = this->warpMap.find(code);
     if (it1 == warpMap.end()) throw std::runtime_error("unknown warpcode " + code);
     auto loc = it1->second;

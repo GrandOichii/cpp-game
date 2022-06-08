@@ -4,8 +4,11 @@
 #include "context.hpp"
 #include "assets.hpp"
 #include "../game/core.hpp"
+#include "util.hpp"
 
-const std::map<int, Double> MOVEMENT_MAP = {
+#include "customContexts.hpp"
+
+const std::map<int, Double> DIRECTION_MAP = {
     //                    x   y
     {SDLK_LEFT  , Double{-1,  0}},
     {SDLK_RIGHT , Double{ 1,  0}},
@@ -17,21 +20,73 @@ const std::map<int, Double> MOVEMENT_MAP = {
     {'n'        , Double{ 1,  1}}
 };
 
+class InteractContext : public Context {
+private:
+    std::function<void(void)> preDraw;
+    std::function<void(Double, bool)> onClose;
+    AssetsManager *assets;
+    SDL_Texture *tex;
+    int x;
 
-class MainPanel : public Context {
+public:
+    InteractContext(Window *parent, AssetsManager *assets, std::function<void(void)> preDraw, std::function<void(Double, bool)> onClose) : Context(parent), assets(assets), preDraw(preDraw), onClose(onClose) {
+        this->tex = assets->getMessage("[ Interact where? ]", SDL_Color{0, 255, 0, 0});
+        auto size = getSize(this->tex);
+        this->x = (WINDOW_WIDTH - size.x) / 2;
+    }
+
+    ~InteractContext() {
+        SDL_DestroyTexture(tex);
+    }
+
+    void draw() {
+        this->preDraw();
+        this->parent->drawTexture(this->tex, this->x, 10);
+    }
+
+    void handleKey(int key) {
+        if (key == SDLK_ESCAPE) {
+            this->onClose(Double{0, 0}, false);
+            return;
+        }
+        auto it = DIRECTION_MAP.find(key);
+        if (it == DIRECTION_MAP.end()) return;
+        this->onClose(it->second, true);
+    }
+};
+
+class MainPanel : public Context, public game::GameWrapper {
 private:
     AssetsManager *assets;
     game::Game *game;
     bool updateGame;
+    InteractContext* iContext;
+    bool focusedTiles[3][3]{};
 public:
     MainPanel(Wrapper *parent) : Context(parent) {
         this->assets = parent->getAssets();
         this->game = parent->getGame();
         this->updateGame = true;
+        auto onClose = [this](Double dir, bool interact){
+            this->clearFocused();
+            this->parent->setCurrentContext(this);
+            if (!interact) return;
+            this->game->interactAt(dir.a[0], dir.a[1]);
+        };
+        auto preDraw = [this](){
+            this->draw();
+        };
+        this->iContext = new InteractContext(this->parent, assets, preDraw, onClose);
     }
     
     ~MainPanel() {
+        delete iContext;
+    }
 
+    void clearFocused() {
+        for (int i = 0; i < 3; i++)
+            for (int ii = 0; ii < 3; ii++)
+                this->focusedTiles[i][ii] = false;
     }
 
     void draw() {
@@ -50,18 +105,23 @@ public:
             auto y = tile.y;
             std::string tileName = roomName + ":" + tile.name;
             auto im = this->assets->getTile(tileName);
-            this->parent->drawImage(im, x * TILE_WIDTH, y * TILE_HEIGHT);
+            this->parent->drawTexture(im, x * TILE_WIDTH, y * TILE_HEIGHT);
         }
+        auto im = this->assets->getFocusedTile();
+        for (int i = 0; i < 3; i++)
+            for (int ii = 0; ii < 3; ii++)
+                if (focusedTiles[i][ii])
+                    this->parent->drawTexture(im, CENTER_X + (ii-1)*TILE_WIDTH, CENTER_Y + (i-1)*TILE_HEIGHT);
     }
 
     void drawPlayer() {
         auto im = this->assets->getPlayer();
-        this->parent->drawImage(im, CENTER_X, CENTER_Y);
+        this->parent->drawTexture(im, CENTER_X, CENTER_Y);
     }
 
     void handleKey(int key) {
-        auto it = MOVEMENT_MAP.find(key);
-        if (it != MOVEMENT_MAP.end()) {
+        auto it = DIRECTION_MAP.find(key);
+        if (it != DIRECTION_MAP.end()) {
             auto mpair = it->second;
             updateGame = this->game->movePlayer(mpair);
             return;
@@ -69,6 +129,9 @@ public:
         switch (key) {
         case ('f'):
             this->parent->toggleFullscreen();
+            return;
+        case ('e'):
+            this->interactMode();
             return;
         case ('i'):
             this->inventoryMode();
@@ -87,8 +150,16 @@ public:
         }
     }
 
+    void interactMode() {
+        auto pairs = this->game->getAdjacentInteractableTiles();
+        for (const auto& pair : pairs)
+            this->focusedTiles[pair.second+1][pair.first+1] = true;
+        this->parent->setCurrentContext(iContext);
+    }
+
     void inventoryMode() {
         // TODO
+        
     }
 
     void spellCastMode() {
@@ -97,5 +168,15 @@ public:
 
     void consoleCommandMode() {
         // TODO
+    }
+
+    void updateLog(string message) {
+        // TODO
+    }
+
+    void sleep(int amount) {
+        std::cout << "Sleeping for " << amount << std::endl;
+        SDL_Delay(amount);
+        this->parent->draw();
     }
 };

@@ -75,6 +75,9 @@ void Tile::execInteractScript() {
     this->interactScript->exec();
 }
 
+bool Tile::hasInteractScript() {
+    return this->interactScript != nullptr;
+}
 
 }
 }

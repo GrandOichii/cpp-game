@@ -24,15 +24,17 @@ void ScriptOverseer::set(std::string name, SObject * object) {
     auto it = this->vars.find(name);
     if (it != this->vars.end()) delete it->second;
     this->vars[name] = object;
+    std::cout << "Var " << name << " set to " << object->str() << std::endl;
 }
 
 bool ScriptOverseer::isSet(std::string name) {
+    // return false;
     return this->vars.find(name) != this->vars.end();
 }
 
 SObject * ScriptOverseer::parseArg(std::string word) {
     if (word[0] == '"' && word[word.size()-1] == '"') {
-        return new SString(word);
+        return new SString(word.substr(1, word.size()-2));
     }
     if (isNumber(word)) {
         return new SInt(std::atoi(word.c_str()));

@@ -2,6 +2,14 @@
 
 // #include "../util.hpp"
 
+int Window::getHeight() {
+    return this->height;
+}
+
+int Window::getWidth() {
+    return this->width;
+}
+
 void Window::setCurrentContext(Context *context) {
     this->currentContext = context;
 }
@@ -10,7 +18,7 @@ SDL_Renderer* Window::getRenderer() const {
     return this->ren;
 }
 
-Window::Window() {
+Window::Window(int width, int height) : width(width), height(height) {
     
 }
 
@@ -18,7 +26,7 @@ Window::~Window() {
     delete currentContext;
 }
 
-void Window::drawImage(SDL_Texture *texture, int x, int y) {
+void Window::drawTexture(SDL_Texture *texture, int x, int y) {
     SDL_Rect pos;
     pos.x = x;
     pos.y = y;
@@ -31,7 +39,9 @@ void Window::handleKey(int key) {
 }
 
 void Window::draw() {
+    SDL_RenderClear(ren);
     this->currentContext->draw();
+    SDL_RenderPresent(ren);
 }
 
 void Window::toggleFullscreen() {
@@ -45,7 +55,7 @@ void Window::start() {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return;
     }
-    this->win = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+    this->win = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->width, this->height, SDL_WINDOW_SHOWN);
     if (this->win == nullptr){
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         return;
@@ -69,9 +79,7 @@ void Window::start() {
                 this->handleKey(event.key.keysym.sym);
             }
         }
-        SDL_RenderClear(ren);
         this->draw();
-        SDL_RenderPresent(ren);
     }
 }
 

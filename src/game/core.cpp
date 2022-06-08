@@ -1,5 +1,6 @@
 #include "core.hpp"
 
+static constexpr int LOG_COUNT = 5;
 static constexpr int RAY_AMOUNT = 200;
 
 static constexpr double rayRadOf(int i) {
@@ -13,6 +14,14 @@ const string CONTAINERS_FILE = "containers.json";
 const string GAME_INFO_FILE = "game_info.json";
 const string ITEMS_FILE = "items.json";
 const string MAPDATA_FILE = "mapdata.json";
+
+void Game::setWrapper(GameWrapper * wrapper) {
+    this->wrapper = wrapper;
+}
+
+GameWrapper * Game::getWrapper() {
+    return this->wrapper;
+}
 
 Game::Game(const char* path) {
     this->scriptOverseer = new scripting::ScriptOverseer(this);
@@ -28,12 +37,14 @@ Game::Game(const char* path) {
     for (auto it = loadMap.begin(); it != loadMap.end(); it++) {
         it->second->load(p, it->first.c_str(), this->scriptOverseer);
     }
+    this->logs = new CircularBuffer<std::string>(LOG_COUNT);
 }
 
 Game::~Game() {
     delete scriptOverseer;
     delete gameInfo;
     delete mapData;
+    delete logs;
 }
 
 GameInfo * Game::getInfo() const { 
@@ -119,6 +130,58 @@ void Game::useWarpCode(std::string code) {
     auto room = this->mapData->getCurrentRoom();
     auto newRoom = room->getName();
     if (newRoom != prevRoom) room->executeLoadScript();
+}
+
+void Game::addToLog(std::string message) {
+    message = "- " + message;
+    this->logs->add(message);
+    this->wrapper->updateLog(message);
+    // for (auto v : this->logs->getV())
+    //     std::cout << v << std::endl;
+}
+
+constexpr int DIR_COUNT = 8;
+constexpr int DIRS[DIR_COUNT][2] = {
+    {0, -1},
+    {0, 1},
+    {-1, 0},
+    {1, 0},
+    {-1, -1},
+    {1, 1},
+    {1, -1},
+    {-1, 1}
+};
+
+vector<std::pair<int, int>> Game::getAdjacentInteractableTiles() {
+    vector<std::pair<int, int>> result;
+    auto room = mapData->getCurrentRoom();
+    auto layout = room->getLayout();
+    auto height = room->getHeight();
+    auto width = room->getWidth();
+    for (int i = 0; i < DIR_COUNT; i++) {
+        auto dir = DIRS[i];
+        auto x = dir[0] + mapData->getPlayerX();
+        auto y = dir[1] + mapData->getPlayerY();
+        if (y < 0 || x < 0 || y >= height || x >= width) {
+            continue;
+        }
+        auto tile = layout[y][x];
+        if (tile->hasInteractScript()) {
+            result.push_back(std::make_pair(dir[0], dir[1]));
+        }
+    }
+    return result;
+}
+
+void Game::interactAt(int xdiff, int ydiff) {
+    auto pX = this->mapData->getPlayerX();
+    auto pY = this->mapData->getPlayerY();
+    auto layout = this->mapData->getCurrentRoom()->getLayout();
+    layout[pY+ydiff][pX+xdiff]->execInteractScript();
+}
+
+void Game::sleep(int amount) {
+    this->wrapper->sleep(amount);
 }
 
 }

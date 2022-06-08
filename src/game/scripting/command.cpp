@@ -41,9 +41,12 @@ static vector<string> parseLine(string line) {
 
 const std::map<string, std::function<bool(vector<string>, ScriptOverseer*)>> IF_EVALS = {
     {"set", [](vector<string> argv, ScriptOverseer* so) {
-        // for (auto e : argv) std::cout << e << " ";
-        // std::cout << std::endl;
+        // std::cout << "Checking whether " << argv[1] << " is set" << std::endl;
         return so->isSet(argv[1]);
+    } },
+    {"=", [](vector<string> argv, ScriptOverseer* so) {
+        // TODO separate string and ints
+        return so->parseArg(argv[0])->str() == so->parseArg(argv[2])->str();
     } }
 };
 
@@ -54,8 +57,8 @@ const std::map<string, func> FUNC_MAP = {
     } },
     { "log", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <log>");
-        std::cout << "Logging: " << args[0]->str() << std::endl;
-        // throw std::runtime_error("log not implemented");
+        std::cout << "\t" << args[0]->str() << std::endl;
+        so->getGame()->addToLog(args[0]->str());
     } },
     { "mb", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 2) throw std::runtime_error("bad argument count for <mb>");
@@ -83,18 +86,37 @@ const std::map<string, func> FUNC_MAP = {
         auto x = ((SInt*)args[1])->getValue();
         auto tileName = ((SRaw*)args[2])->get();
         std::cout << "Setting tile at (" << y << "; " << x << ") to: " << tileName << std::endl;
-        throw std::runtime_error("tset not implemented");
+        
+        auto split = str::split(tileName, ":");
+        if (split.size() != 2) throw std::runtime_error("can't set tile " + tileName);
+        auto roomName = split[0];
+        tileName = split[1];
+        auto roomMap = so->getGame()->getMap()->getRoomMap();
+        auto it = roomMap.find(roomName);
+        if (it == roomMap.end()) throw std::runtime_error("no room with name " + roomName);
+        auto room = it->second;
+        auto tileSetSize = room->getTileSetSize();
+        auto tileSet = room->getTileSet();
+        map::Tile* tile = nullptr;
+        for (int i = 0; i < tileSetSize; i++) {
+            if (tileSet[i]->getName() == tileName) {
+                tile = tileSet[i];
+                break;
+            }
+        }
+        if (tile == nullptr) throw std::runtime_error("not tile with name " + tileName + " in room " + roomName);
+        room->getLayout()[y][x] = tile;
     } },
     { "sleep", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <sleep>");
         auto amount = ((SInt*)args[0])->getValue();
-        std::cout << "Sleeping for " << amount << std::endl;
-        throw std::runtime_error("sleep not implemented");
+        so->getGame()->sleep(amount);
     } },
     { "run", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <run>");
         auto macroName = ((SRaw*)args[0])->get();
         auto macro = so->getMacro(macroName);
+        std::cout << "Running macro " << macroName << std::endl;
         macro->exec();
     } },
     { "opencontainer", [](ScriptOverseer* so, SObject** args, int argc) {
@@ -105,13 +127,19 @@ const std::map<string, func> FUNC_MAP = {
         throw std::runtime_error("opencontainer not implemented");
     } },
     { "if", [](ScriptOverseer* so, SObject** args, int argc) {
-        vector<string> argv;
-        for (int i = 0; i < argc; i++)
-            argv.push_back(((SRaw*)args[i])->get());
-        // for (auto v : argv)
-        //     std::cout << v << " ";
-        // std::cout << std::endl;
 
+        vector<string> argv;
+        for (int i = 0; i < argc; i++) {
+            // auto raw = (SRaw*)args[i];
+            // std::cout << "Loop: ";
+            // std::cout << raw->get() << std::endl;
+            // argv.push_back(raw->get());
+            // std::cout << "poop" << std::endl;
+            argv.push_back(args[i]->getRaw());
+            std::cout << args[i]->getRaw() << " ";
+        }
+        std::cout << std::endl;
+        
         auto thenI = -1;
         for (int i = 0; i < argc; i++) {
             auto arg = argv[i];
@@ -124,6 +152,7 @@ const std::map<string, func> FUNC_MAP = {
         auto reverse = false;
         auto doIf = false;
 
+
         vector<string> ifArgs = {argv.begin(), argv.begin() + thenI};
         vector<string> actionArgs = {argv.begin()+thenI+1, argv.end()};
         if (ifArgs[0] == "not") {
@@ -131,6 +160,7 @@ const std::map<string, func> FUNC_MAP = {
             ifArgs = {ifArgs.begin()+1, ifArgs.end()};
         }
         string ifOp = "";
+        std::cout << ifArgs[1] <<std::endl;
         for (auto it = IF_EVALS.begin(); it != IF_EVALS.end(); it++) {
             if (it->first == ifArgs[1]) {
                 ifOp = it->first;
@@ -139,7 +169,6 @@ const std::map<string, func> FUNC_MAP = {
         }
         if (ifOp == "") {
             vector<string> exceptions{"set", "has_item"};
-
             auto ifArgFirst = ifArgs[0];
             if (std::find(exceptions.begin(), exceptions.end(), ifArgFirst) != exceptions.end()) {
                 ifOp = ifArgFirst;
@@ -151,7 +180,6 @@ const std::map<string, func> FUNC_MAP = {
         doIf = (doIf || reverse) && !(doIf && reverse);
         if (doIf) {
             auto j = str::join(actionArgs.begin(), actionArgs.end(), " ");
-            std::cout << j << std::endl;
             auto c = new Command(j, so);
             c->exec();
             delete c;
@@ -161,8 +189,6 @@ const std::map<string, func> FUNC_MAP = {
         if (argc != 1) throw std::runtime_error("bad argument count for <warp>");
         auto code = ((SRaw*)args[0])->get();
         so->getGame()->useWarpCode(code);
-        // std::cout << "Warping to " << code << std::endl;
-        // throw std::runtime_error("warp not implemented");
     } },
     { "give", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <give>");

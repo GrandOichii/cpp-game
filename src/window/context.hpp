@@ -12,10 +12,7 @@ protected:
     Window *parent;
 public:
     Context(Window *parent) : parent(parent) {}
-
     virtual ~Context() = default;
-
     virtual void draw() = 0;
-
     virtual void handleKey(int key) = 0;
 };

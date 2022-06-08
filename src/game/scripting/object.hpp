@@ -11,8 +11,12 @@ namespace scripting {
 class ScriptOverseer;
 
 class SObject {
+protected:
+    std::string raw;
 public:
+    SObject(std::string raw);
     virtual std::string str() = 0;
+    virtual std::string getRaw();
     virtual SObject * copy() = 0;
     virtual ~SObject() = default;
 };
@@ -28,7 +32,7 @@ public:
 };
 
 class SString : public SObject {
-private:
+protected:
     std::string value;
 public:
     SString(const std::string value);
@@ -41,14 +45,13 @@ class SCustom : public SObject {
 private:
     std::function<std::string(void)> strFunc;
 public:
-    SCustom(std::function<std::string(void)> strFunc);
+    SCustom(std::string name, std::function<std::string(void)> strFunc);
     SObject * copy();
     std::string str();
 };
 
 class SRaw : public SObject {
 private:
-    std::string word;
     ScriptOverseer * so;
 public:
     SRaw(std::string word, ScriptOverseer * so);

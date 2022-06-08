@@ -5,8 +5,15 @@
 namespace game {
 namespace scripting {
 
+SObject::SObject(std::string raw) : raw(raw) {
 
-SInt::SInt(const int value) : value(value) {
+}
+
+std::string SObject::getRaw() {
+    return this->raw;
+}
+
+SInt::SInt(const int value) : SObject(std::to_string(value)), value(value) {
 
 }
 
@@ -22,8 +29,8 @@ int SInt::getValue() {
     return this->value;
 }
 
-SString::SString(const std::string value) : value(value) {
-
+SString::SString(const std::string value) : SObject(value) {
+    this->value = value.substr(1, value.size() - 2);
 }
 
 SObject * SString::copy() {
@@ -38,7 +45,7 @@ void SString::add(std::string value) {
     this->value += value;
 }
 
-SCustom::SCustom(std::function<std::string(void)> strFunc) : strFunc(strFunc) {
+SCustom::SCustom(std::string name, std::function<std::string(void)> strFunc) : SObject(name), strFunc(strFunc) {
 
 }
 
@@ -50,16 +57,17 @@ std::string SCustom::str() {
     return this->strFunc();
 }
 
-SRaw::SRaw(std::string word, ScriptOverseer * so) : word(word), so(so) {
+SRaw::SRaw(std::string word, ScriptOverseer * so) : SObject(word), so(so) {
 
 }
 
 SObject * SRaw::copy() {
-    throw std::runtime_error("can't make copy of raw object (don't know what " + this->word + " is)");
+    // TODO
+    return this->getObject()->copy();
 }
 
 std::string SRaw::get() {
-    return word;
+    return raw;
 }
 
 SObject * SRaw::getObject() {
@@ -72,4 +80,3 @@ std::string SRaw::str() {
 
 }
 }
-

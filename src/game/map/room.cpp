@@ -32,6 +32,14 @@ string Room::getName() const {
     return this->name;
 }
 
+int Room::getTileSetSize() {
+    return this->tileCount;
+}
+
+Tile** Room::getTileSet() const {
+    return this->tiles;
+}
+
 Room::Room(string name, unsigned int visibleRange) : name(name), visibleRange(visibleRange) {}
 
 Room::~Room() {

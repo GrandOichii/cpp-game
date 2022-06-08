@@ -34,6 +34,7 @@ public:
     void print(const char* prefix);
     void execStepScript();
     void execInteractScript();
+    bool hasInteractScript();
 };
 
 }

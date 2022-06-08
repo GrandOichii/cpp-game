@@ -17,6 +17,36 @@ struct Double {
 
 bool isNumber(string word);
 
+template<class T>
+class CircularBuffer {
+private:
+    int size;
+    int i;
+    T* b;
+public:
+    CircularBuffer(int size) : size(size), i(0) {
+        this->b = new T[size];
+    }
+    
+    ~CircularBuffer(){
+        delete[] b;
+    }   
+    
+    void add(T item)  {
+        ++i;
+        i %= size;
+        this->b[i] = item;
+    }
+    
+    vector<T> getV() {
+        vector<T> result;
+        for (int ii = 0; ii < size; ii++) {
+            result.push_back(b[(i+ii)%size]);
+        }
+        return result;
+    }
+};
+
 namespace str {
     void ltrim(std::string &s);
 
