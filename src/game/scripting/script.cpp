@@ -45,11 +45,11 @@ Script::~Script() {
 
 void Script::exec() {
     int i = 0;
-    std::cout << "(todo: " << commands.size() << ")" << std::endl;
+    // std::cout << "(todo: " << commands.size() << ")" << std::endl;
     for (const auto command : commands) {
-        std::cout << "\texecuting ( " << i << " )" << std::endl;
+        // std::cout << "\texecuting ( " << i << " )" << std::endl;
         command->exec();
-        std::cout << "\tfinished ( " << i << " )" << std::endl;
+        // std::cout << "\tfinished ( " << i << " )" << std::endl;
         i++;
     }
 }  

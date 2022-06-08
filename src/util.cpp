@@ -65,7 +65,6 @@ namespace str {
         return result;
     }
 
-
     vector<string> split(string s, const string delimiter) {
         size_t pos = 0;
         string token;

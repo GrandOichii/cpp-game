@@ -172,6 +172,7 @@ public:
 
     void updateLog(string message) {
         // TODO
+        std::cout << message << std::endl;
     }
 
     void sleep(int amount) {

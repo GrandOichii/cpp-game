@@ -34,7 +34,7 @@ SString::SString(const std::string value) : SObject(value) {
 }
 
 SObject * SString::copy() {
-    return new SString(this->value);
+    return new SString("\"" + this->value + "\"");
 }
 
 std::string SString::str() { 
