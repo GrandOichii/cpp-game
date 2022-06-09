@@ -18,52 +18,56 @@ const std::map<int, Double> DIRECTION_MAP = {
     {'n'        , Double{ 1,  1}}
 };
 
-InteractContext::InteractContext(Window *parent, AssetsManager *assets, std::function<void(void)> preDraw, std::function<void(Double, bool)> onClose) : Context(parent), assets(assets), preDraw(preDraw), onClose(onClose) {
-    this->tex = assets->getMessage("[ Interact where? ]", SDL_Color{0, 255, 0, 0});
-    auto size = getSize(this->tex);
-    this->x = (WINDOW_WIDTH - size.x) / 2;
-}
+// InteractContext::InteractContext(Window *parent, AssetsManager *assets, std::function<void(void)> preDraw, std::function<void(Double, bool)> onClose) : Context(parent), assets(assets), preDraw(preDraw), onClose(onClose) {
+//     this->tex = assets->getMessage("[ Interact where? ]", SDL_Color{0, 255, 0, 0});
+//     auto size = getSize(this->tex);
+//     this->x = (WINDOW_WIDTH - size.x) / 2;
+// }
 
-InteractContext::~InteractContext() {
-    SDL_DestroyTexture(tex);
-}
+// InteractContext::~InteractContext() {
+//     SDL_DestroyTexture(tex);
+//     delete logs;
+// }
 
-void InteractContext::draw() {
-    this->preDraw();
-    this->parent->drawTexture(this->tex, this->x, 10);
-}
+// void InteractContext::draw() {
+//     this->preDraw();
+//     this->parent->drawTexture(this->tex, this->x, 10);
+// }
 
-void InteractContext::handleKey(int key) {
-    if (key == SDLK_ESCAPE) {
-        this->onClose(Double{0, 0}, false);
-        return;
-    }
-    auto it = DIRECTION_MAP.find(key);
-    if (it == DIRECTION_MAP.end()) return;
-    this->onClose(it->second, true);
-}
+// void InteractContext::handleKey(int key) {
+//     if (key == SDLK_ESCAPE) {
+//         this->onClose(Double{0, 0}, false);
+//         return;
+//     }
+//     auto it = DIRECTION_MAP.find(key);
+//     if (it == DIRECTION_MAP.end()) return;
+//     this->onClose(it->second, true);
+// }
 
 MainPanel::MainPanel(Wrapper *parent) : Context(parent) {
     this->assets = parent->getAssets();
     this->game = parent->getGame();
     this->updateGame = true;
-    auto preDraw = [this](){
-        this->draw();
-    };
-    auto onClose1 = [this](Double dir, bool interact){
-        this->clearFocused();
-        this->parent->setCurrentContext(this);
-        std::cout << "Context set to main" << std::endl;
+    // auto preDraw = [this](){
+    //     this->draw();
+    // };
+    // auto onClose1 = [this](Double dir, bool interact){
+    //     this->clearFocused();
+    //     this->parent->setCurrentContext(this);
+    //     std::cout << "Context set to main" << std::endl;
 
-        // this->parent->draw();
-        if (!interact) return;
-        this->game->interactAt(dir.a[0], dir.a[1]);
-    };
-    this->iContext = new InteractContext(this->parent, assets, preDraw, onClose1);
+    //     // this->parent->draw();
+    //     if (!interact) return;
+    //     this->game->interactAt(dir.a[0], dir.a[1]);
+    // };
+    // this->iContext = new InteractContext(this->parent, assets, preDraw, onClose1);
+    auto fs = assets->getFontSize();
+    auto lineAmount = LOG_HEIGHT / fs;
+    this->logs = new CircularBuffer<std::string>(lineAmount);
 }
 
 MainPanel::~MainPanel() {
-    delete iContext;
+    // delete iContext;
 }
 
 void MainPanel::clearFocused() {
@@ -74,10 +78,24 @@ void MainPanel::clearFocused() {
 
 void MainPanel::draw() {
     this->drawTiles();
+    this->drawLog();
     this->drawPlayer();
     // update game
     if (this->updateGame) this->game->update();
     this->updateGame = false;
+}
+
+void MainPanel::drawLog() {
+    auto tex = assets->getLogBackground();
+    this->parent->drawTexture(tex, 0, LOG_Y);
+    auto lines = logs->getV();
+    auto fs = this->assets->getFontSize();
+    for (int i = 0; i < lines.size(); i++) {
+        if (lines[i].size() == 0) continue;
+        auto tex = assets->getMessage(lines[i], SDL_Color{3, 138, 255});
+        parent->drawTexture(tex, 5, LOG_Y + 5 + fs * i);
+        SDL_DestroyTexture(tex);
+    }
 }
 
 void MainPanel::drawTiles() {
@@ -186,8 +204,12 @@ void MainPanel::consoleCommandMode() {
 }
 
 void MainPanel::updateLog(string message) {
-    // TODO
-    std::cout << message << std::endl;
+    const int xOffset = 10;
+    auto longt = assets->getMessage(message);
+    auto mwidth = getSize(longt).x;
+    int maxWidth = (message.size() * (LOG_WIDTH-xOffset*2)) / mwidth;
+    auto lines = str::widthSplit(message, maxWidth);
+    for (int i = 0; i < lines.size(); i++) logs->add(lines[i]);
 }
 
 void MainPanel::sleep(int amount) {
@@ -199,9 +221,6 @@ void MainPanel::sleep(int amount) {
 }
 
 string MainPanel::requestChoice(string text, string choices) {
-    int size = 2;
-    std::string* ch = new std::string[size]{"Hello", "there"};
-    std::string result = showMessageBox(this->parent, this->assets, text, ch, size);
-    delete[] ch;
+    std::string result = showMessageBox(this->parent, this->assets, text, str::split(choices, "_"));
     return result;
 }

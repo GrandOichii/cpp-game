@@ -4,7 +4,8 @@
     "font": "images/font/Alkhemikal.ttf",
     "focused_tile": "images/tiles/cursor.bmp",
     "message_box": "images/message_box/mb.bmp",
-
+    "logBG" : "images/log/bg.bmp",
+    
     "tiles": {
         "index:wall": "images/tiles/wall.bmp",
         "index:floor": "images/tiles/floor.bmp",

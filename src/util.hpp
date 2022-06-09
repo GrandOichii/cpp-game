@@ -40,9 +40,18 @@ public:
     
     vector<T> getV() {
         vector<T> result;
-        for (int ii = 0; ii < size; ii++) {
-            result.push_back(b[(i+ii)%size]);
+        for (int ii = 0; ii < size; ii++) { 
+            result.push_back(b[(i+ii+1)%size]);
         }
+        return result;
+    }
+
+    vector<T> getLast(int count) {
+        auto v = this->getV();
+        if (count <= v.size()) return v;
+        vector<T> result;
+        for (int i = 0; i < count; i++)
+            result.push_back(v[i]);
         return result;
     }
 };

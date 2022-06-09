@@ -188,5 +188,9 @@ string Game::requestChoice(string text, string choices) {
     return this->wrapper->requestChoice(text, choices);
 }
 
+vector<string> Game::getLastLogs(int count) {
+    return this->logs->getLast(count);
+}
+
 
 }

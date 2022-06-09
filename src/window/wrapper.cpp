@@ -20,7 +20,7 @@ Wrapper::~Wrapper() {
 }
 
 void Wrapper::setup() {
-    this->assets = new AssetsManager(assetsPath, 30, ren);
+    this->assets = new AssetsManager(assetsPath, 30, ren, this->game);
     // set the icon
     SDL_Surface *icon = SDL_LoadBMP(fs::join(assetsPath, "icon.bmp").c_str());
     if (icon == nullptr){

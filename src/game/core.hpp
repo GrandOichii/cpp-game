@@ -53,6 +53,7 @@ public:
     void interactAt(int xdiff, int ydiff);
     void sleep(int amount);
     string requestChoice(string text, string choices);
+    vector<string> getLastLogs(int count);
 };
 
 }
