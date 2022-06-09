@@ -31,6 +31,7 @@ void Window::drawTexture(SDL_Texture *texture, int x, int y) {
     pos.y = y;
     SDL_QueryTexture(texture, NULL, NULL, &pos.w, &pos.h);
     SDL_RenderCopy(ren, texture, NULL, &pos);
+    // std::cout << "Drawing texture at " << y << " " << x << std::endl;
 }
 
 void Window::drawTextureMiddle(SDL_Texture *texture) {
@@ -45,7 +46,10 @@ void Window::handleKey(int key) {
 }
 
 void Window::clear() {
+    // SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
     SDL_RenderClear(ren);
+    // SDL_RenderClear(ren);
+    // SDL_RenderClear(ren);
 }
 
 void Window::flush() {
@@ -92,7 +96,7 @@ void Window::start() {
         }
         this->clear();
         this->draw();
-        flush();
+        this->flush();
     }
 }
 

@@ -138,8 +138,8 @@ void MainPanel::interactMode() {
     for (const auto& pair : pairs)
         this->focusedTiles[pair.second+1][pair.first+1] = true;
     // this->parent->setCurrentContext(iContext);
-    // std::cout << "Context set to interact" << std::endl;
     auto tex = assets->getMessage("[ Interact where? ]", SDL_Color{0, 255, 0, 0});
+    // auto tex = assets->getPlayer();
     auto size = getSize(tex);
     auto x = (WINDOW_WIDTH - size.x) / 2;
     this->draw();
@@ -148,24 +148,28 @@ void MainPanel::interactMode() {
     auto event = this->parent->getEvent();
     bool interact = false;
     Double dir;
-    while (SDL_WaitEvent(event)) {
-        if (event->type == SDL_QUIT) {
-            this->parent->close();
-            return;
-        }
-        if (event->type == SDL_KEYDOWN) {
-            auto key = event->key.keysym.sym;
-            auto it = DIRECTION_MAP.find(key);
-            if (it != DIRECTION_MAP.end()) {
-                dir = it->second;
-                interact = true;
+    bool running = true;
+    while (running) {
+        while (SDL_PollEvent(event)) {
+            switch(event->type) {
+            case SDL_QUIT:
+                this->parent->close();
+                return;
+            case SDL_KEYDOWN:
+                auto key = event->key.keysym.sym;
+                auto it = DIRECTION_MAP.find(key);
+                if (it != DIRECTION_MAP.end()) {
+                    dir = it->second;
+                    interact = true;
+                }
+                running = false;
             }
-            break;
         }
     }
-    if (!interact) return;
+    SDL_DestroyTexture(tex);
+    tex = nullptr;
     this->clearFocused();
-    this->game->interactAt(dir.a[0], dir.a[1]);
+    if (interact) this->game->interactAt(dir.a[0], dir.a[1]);
 }
 
 void MainPanel::inventoryMode() {
@@ -187,9 +191,11 @@ void MainPanel::updateLog(string message) {
 }
 
 void MainPanel::sleep(int amount) {
+    this->parent->clear();
+    this->draw();
+    this->parent->flush();
     std::cout << "Sleeping for " << amount << std::endl;
     SDL_Delay(amount);
-    this->parent->draw();
 }
 
 string MainPanel::requestChoice(string text, string choices) {
