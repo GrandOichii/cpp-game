@@ -4,10 +4,8 @@
 
 #include "window.hpp"
 #include "assets.hpp"
-#include "mainPanel.hpp"
+#include "main_panel.hpp"
 #include "../game/core.hpp"
-
-
 
 Wrapper::Wrapper(std::string path, std::string assetsPath) : Window(WINDOW_WIDTH, WINDOW_HEIGHT) {
     this->game = new game::Game(path.c_str());
@@ -22,7 +20,7 @@ Wrapper::~Wrapper() {
 }
 
 void Wrapper::setup() {
-    this->assets = new AssetsManager(assetsPath, ren);
+    this->assets = new AssetsManager(assetsPath, 30, ren);
     // set the icon
     SDL_Surface *icon = SDL_LoadBMP(fs::join(assetsPath, "icon.bmp").c_str());
     if (icon == nullptr){

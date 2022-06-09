@@ -49,6 +49,10 @@ const std::map<string, std::function<bool(vector<string>, ScriptOverseer*)>> IF_
     {"=", [](vector<string> argv, ScriptOverseer* so) {
         // TODO separate string and ints
         return so->parseArg(argv[0])->str() == so->parseArg(argv[2])->str();
+    } },
+    {"has_item", [](vector<string> argv, ScriptOverseer* so) {
+        // TODO
+        return true;
     } }
 };
 
@@ -65,8 +69,8 @@ const std::map<string, func> FUNC_MAP = {
         if (argc != 2) throw std::runtime_error("bad argument count for <mb>");
         auto text = args[0]->str();
         auto choices = args[1]->str();
-        // TODO set _mbresult
-        throw std::runtime_error("mb not implemented");
+        std::string res = so->getGame()->requestChoice(text, choices);
+        so->set("_mbresult", new SString("\"" + res + "\""));
     } },
     { "set", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 2) throw std::runtime_error("bad argument count for <set>");

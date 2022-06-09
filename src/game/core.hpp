@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "map/map.hpp"
-#include "gameInfo.hpp"
+#include "game_info.hpp"
 #include "scripting/overseer.hpp"
 #include "../util.hpp"
 
@@ -18,6 +18,7 @@ class GameWrapper {
 public:
     virtual void updateLog(string message) = 0;
     virtual void sleep(int amount) = 0;
+    virtual string requestChoice(string text, string choices) = 0;
     virtual ~GameWrapper() = default;
 };
 
@@ -51,6 +52,7 @@ public:
     vector<std::pair<int, int>> getAdjacentInteractableTiles();
     void interactAt(int xdiff, int ydiff);
     void sleep(int amount);
+    string requestChoice(string text, string choices);
 };
 
 }

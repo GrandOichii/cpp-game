@@ -48,6 +48,8 @@ public:
 };
 
 namespace str {
+    vector<string> widthSplit(string text, int maxWidth);
+
     void ltrim(std::string &s);
 
     void rtrim(std::string &s);

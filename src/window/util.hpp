@@ -1,9 +1,11 @@
 #pragma once
 
 #include <SDL.h>
+#include <string>
 
-SDL_Point getSize(SDL_Texture *texture) {
-    SDL_Point size;
-    SDL_QueryTexture(texture, NULL, NULL, &size.x, &size.y);
-    return size;
-}
+#include "assets.hpp"
+#include "window.hpp"
+
+SDL_Point getSize(SDL_Texture *texture);
+
+std::string showMessageBox(Window* window, AssetsManager* assets, std::string text, std::string* choices, int choisesC);

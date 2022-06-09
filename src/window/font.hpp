@@ -6,8 +6,8 @@
 
 class Font {
 private:
+    SDL_Renderer* ren;
     TTF_Font *font;
-    SDL_Renderer *ren;
 public:
     Font(const char* path, int fontSize, SDL_Renderer* ren) : ren(ren) {
         if (TTF_Init() != 0){

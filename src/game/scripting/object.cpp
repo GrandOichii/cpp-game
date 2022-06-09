@@ -14,10 +14,9 @@ std::string SObject::getRaw() {
 }
 
 SInt::SInt(const int value) : SObject(std::to_string(value)), value(value) {
-
 }
 
-std::string SInt::str() { 
+std::string SInt::str() {
     return std::to_string(value); 
 }
 
@@ -46,7 +45,6 @@ void SString::add(std::string value) {
 }
 
 SCustom::SCustom(std::string name, std::function<std::string(void)> strFunc) : SObject(name), strFunc(strFunc) {
-
 }
 
 SObject * SCustom::copy() {
@@ -58,7 +56,6 @@ std::string SCustom::str() {
 }
 
 SRaw::SRaw(std::string word, ScriptOverseer * so) : SObject(word), so(so) {
-
 }
 
 SObject * SRaw::copy() {

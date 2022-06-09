@@ -16,6 +16,27 @@ bool isNumber(string word) {
 }
 
 namespace str {
+    vector<string> widthSplit(string text, int maxWidth) {
+        vector<string> result;
+        auto newLineSplit = split(text, "\n");
+        for (auto subText : newLineSplit) {
+            auto sp = split(subText, " ");
+            auto line = sp[0];
+            for (int i = 1; i < sp.size(); i++) {
+                auto word = sp[i];
+                if ((line + " " + word).length() > maxWidth) {
+                    result.push_back(line);
+                    line = word;
+                }
+                else {
+                    line += " " + word;
+                }
+            }
+            result.push_back(line);
+        }
+        return result;
+    }
+
     // trim from start (in place)
     void ltrim(std::string &s) {
         s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {

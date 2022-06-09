@@ -1,6 +1,6 @@
 #include "window.hpp"
-
-// #include "../util.hpp"
+#include "util.hpp"
+#include "context.hpp"
 
 int Window::getHeight() {
     return this->height;
@@ -19,7 +19,6 @@ SDL_Renderer* Window::getRenderer() const {
 }
 
 Window::Window(int width, int height) : width(width), height(height) {
-    
 }
 
 Window::~Window() {
@@ -34,14 +33,27 @@ void Window::drawTexture(SDL_Texture *texture, int x, int y) {
     SDL_RenderCopy(ren, texture, NULL, &pos);
 }
 
+void Window::drawTextureMiddle(SDL_Texture *texture) {
+    auto size = getSize(texture);
+    auto x = (this->width - size.x) / 2;
+    auto y = (this->height - size.y) / 2;
+    this->drawTexture(texture, x, y);
+}
+
 void Window::handleKey(int key) {
     this->currentContext->handleKey(key);
 }
 
-void Window::draw() {
+void Window::clear() {
     SDL_RenderClear(ren);
-    this->currentContext->draw();
+}
+
+void Window::flush() {
     SDL_RenderPresent(ren);
+}
+
+void Window::draw() {
+    this->currentContext->draw();
 }
 
 void Window::toggleFullscreen() {
@@ -67,20 +79,25 @@ void Window::start() {
     }
     this->setup();
     this->running = true;
-    SDL_Event event;
     while (this->running) {
         // handle events
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
+        while (SDL_PollEvent(this->event)) {
+            switch (event->type) {
             case SDL_QUIT:
                 this->running = false;
                 break;
             case SDL_KEYDOWN:
-                this->handleKey(event.key.keysym.sym);
+                this->handleKey(event->key.keysym.sym);
             }
         }
+        this->clear();
         this->draw();
+        flush();
     }
+}
+
+SDL_Event* Window::getEvent() {
+    return this->event;
 }
 
 void Window::close() {

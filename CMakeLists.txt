@@ -6,7 +6,12 @@ project(game)
 
 file(GLOB srcFiles 
     src/*.cpp 
+    # src/window/message_box.cpp
     src/window/*.cpp
+    src/window/main_panel.cpp
+    src/window/util.cpp
+    src/window/window.cpp
+    src/window/wrapper.cpp
     src/game/*.cpp
     src/game/map/*.cpp
     src/game/scripting/*.cpp 

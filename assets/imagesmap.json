@@ -3,7 +3,8 @@
     "player": "images/player.bmp",
     "font": "images/font/Alkhemikal.ttf",
     "focused_tile": "images/tiles/cursor.bmp",
-    
+    "message_box": "images/message_box/mb.bmp",
+
     "tiles": {
         "index:wall": "images/tiles/wall.bmp",
         "index:floor": "images/tiles/floor.bmp",

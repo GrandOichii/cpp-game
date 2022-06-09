@@ -3,8 +3,9 @@
 #include <map>
 #include <SDL.h>
 
-#include "context.hpp"
+// #include "context.hpp"
 
+class Context;
 
 class Window {
 protected:
@@ -14,6 +15,7 @@ protected:
     bool fullscreen;
     bool running;
     const char* title;
+    SDL_Event* event = new SDL_Event();
     int height;
     int width;
 
@@ -21,6 +23,9 @@ protected:
     virtual void setup() = 0;
 
 public:
+    SDL_Event* getEvent();
+    void clear();
+    void flush();
     void draw();
     int getHeight();
     int getWidth();
@@ -28,6 +33,7 @@ public:
     ~Window();
     void start();
     void drawTexture(SDL_Texture *texture, int x, int y);
+    void drawTextureMiddle(SDL_Texture *texture);
     void setCurrentContext(Context *context);
     void close();
     SDL_Renderer *getRenderer() const;

@@ -9,13 +9,15 @@
 
 class AssetsManager {
 private:
+    int fontSize;
     SDL_Renderer *ren = nullptr;
     SDL_Texture *player = nullptr;
+    SDL_Texture *mbBackground = nullptr;
     SDL_Texture* focusedTile;
     Font *font;
     std::map<std::string, SDL_Texture*> tileMap;
 public:
-    AssetsManager(const std::string assetsPath, SDL_Renderer *ren) : ren(ren) {
+    AssetsManager(const std::string assetsPath, int fontSize, SDL_Renderer *ren) : ren(ren), fontSize(fontSize) {
         auto j = fs::readJS(fs::join(vector<string>{assetsPath, "imagesmap.json"}));
         auto tiles = j["tiles"];
         for (const auto& item : tiles.items()) {
@@ -25,15 +27,21 @@ public:
         }
         this->player = this->loadTile(fs::join(assetsPath, j["player"]).c_str());
         this->focusedTile = this->loadTile(fs::join(assetsPath, j["focused_tile"]).c_str());
-        this->font = new Font(fs::join(assetsPath, j["font"]).c_str(), 32, this->ren);
+        this->mbBackground = this->loadTile(fs::join(assetsPath, j["message_box"]).c_str());
+        this->font = new Font(fs::join(assetsPath, j["font"]).c_str(), fontSize, this->ren);
     }
 
     ~AssetsManager() {
         SDL_DestroyTexture(player);
         SDL_DestroyTexture(focusedTile);
+        SDL_DestroyTexture(mbBackground);
         for (auto it = tileMap.begin(); it != tileMap.end(); it++)
             SDL_DestroyTexture(it->second);
         delete font;
+    }
+
+    int getFontSize() {
+        return this->fontSize;
     }
 
     SDL_Texture *loadTile(const char* path) {
@@ -64,6 +72,10 @@ public:
 
     SDL_Texture *getFocusedTile() {
         return this->focusedTile;
+    }
+
+    SDL_Texture *getMessageBoxBG() {
+        return this->mbBackground;
     }
 
     SDL_Texture *getMessage(std::string message) {

@@ -184,4 +184,9 @@ void Game::sleep(int amount) {
     this->wrapper->sleep(amount);
 }
 
+string Game::requestChoice(string text, string choices) {
+    return this->wrapper->requestChoice(text, choices);
+}
+
+
 }
