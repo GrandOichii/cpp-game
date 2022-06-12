@@ -1,9 +1,71 @@
 {
+    "incantationBooks": [
+        {
+            "name": "book1",
+            "displayName": "Simple incantation book",
+            "description": "A simple spellbook. Great for starting mages.",
+            "intRequirement": 15,
+            "targets": [
+                "SELF"
+            ],
+            "types": [
+                "HEAL",
+                "FIRE"
+            ],
+            "intensities": [
+                "LOW"
+            ]
+        },
+        {
+            "name": "mega_book",
+            "displayName": "Magicka maxima",
+            "description": "A mega book of spells. Teaches reader all the spells that they will ever need.",
+            "intRequirement": 10,
+            "targets": [
+                "SELF",
+                "OTHER"
+            ],
+            "types": [
+                "HEAL",
+                "FIRE"
+            ],
+            "intensities": [
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+            ]
+        },
+        {
+            "name": "book2",
+            "displayName": "Quantum phisics book.",
+            "description": "You can't read this book.",
+            "intRequirement": 50,
+            "targets": [
+                ""
+            ],
+            "types": [
+                ""
+            ],
+            "intensities": [
+                ""
+            ]
+        }
+    ],
     "basic": [
         {
             "name": "rock",
             "displayName": "Rock",
             "description": "A small rock. Can be found anywhere. Not much use."
+        },
+        {
+            "name": "door_key",
+            "displayName": "Key",
+            "description": "A simple key."
+        },
+        {
+            "name": "lamp",
+            "displayName": "Lamp",
+            "description": "A strange lamp. Don't know anything you could do with it."
         }
     ],
     "ammo": [
@@ -42,9 +104,9 @@
             "slot": "TORSO"
         },
         {
-            "name": "iron_leggins",
-            "displayName": "Iron Leggins",
-            "description": "A standard pair of iron leggins.",
+            "name": "iron_leggings",
+            "displayName": "Iron Leggings",
+            "description": "A standard pair of iron leggings.",
             "armorRating": 4,
             "requirements": {
                 "STR": 12,
@@ -103,5 +165,4 @@
             "slot": "ARMS"
         }
     ]
-
 }

@@ -76,19 +76,3 @@ if opened_secret1 = 1 then run open_wall
 
 if not set spawned then run spawned_macro
 run index_update
-give "rock"
-give "wooden_arrow"
-give "rock"
-give "wooden_arrow"
-give "broadsword"
-give "wooden_stick"
-give "wooden_bow"
-give "iron_leggins"
-give "broadsword"
-give "iron_helmet"
-give "iron_cuirass"
-give "rock"
-give "rock"
-give "rock"
-give "wooden_bow"
-give "wooden_bow"

@@ -8,6 +8,7 @@
 namespace game {
 namespace scripting {
 
+
 ScriptOverseer::ScriptOverseer(Game * game) : game(game) {
 }
 
@@ -18,6 +19,14 @@ ScriptOverseer::~ScriptOverseer() {
 
 Game * ScriptOverseer::getGame() {
     return this->game;
+}
+
+SObject * ScriptOverseer::get(std::string key) {
+    auto it1 = vars.find(key);
+    if (it1 != vars.end()) return it1->second;
+    auto it2 = immutableVars.find(key);
+    if (it2 != immutableVars.end()) return it2->second();
+    throw std::runtime_error("don't know what " + key + " is");
 }
 
 void ScriptOverseer::set(std::string name, SObject * object) {
@@ -67,6 +76,11 @@ Script * ScriptOverseer::getMacro(std::string name) {
     if (it == this->macros.end()) throw std::runtime_error("unknown macro: " + name);
     return it->second;
 }
+
+// void ScriptOverseer::addContainerKey(std::string key) {
+//     this->set(formatContainer(key), new SInt(0));
+// }
+
 
 }
 }

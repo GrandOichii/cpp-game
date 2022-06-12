@@ -25,10 +25,11 @@ class SInt : public SObject {
 private:
     int value;
 public:
-    SInt(const int value);
+    SInt(int value);
     SObject * copy();
     std::string str();
     int getValue();
+    void setValue(int value);
 };
 
 class SString : public SObject {

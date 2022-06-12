@@ -13,7 +13,8 @@ std::string SObject::getRaw() {
     return this->raw;
 }
 
-SInt::SInt(const int value) : SObject(std::to_string(value)), value(value) {
+SInt::SInt(int value) : SObject(std::to_string(value)), value(value) {
+    // std::cout << getRaw() << "\t" << value << " set" << std::endl;
 }
 
 std::string SInt::str() {
@@ -25,8 +26,13 @@ SObject * SInt::copy() {
 }
 
 int SInt::getValue() {
-    return this->value;
+    return value;
 }
+
+void SInt::setValue(int value) {
+    this->value = value;
+}
+
 
 SString::SString(const std::string value) : SObject(value) {
     this->value = value.substr(1, value.size() - 2);

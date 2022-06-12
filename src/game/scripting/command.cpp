@@ -51,10 +51,12 @@ const std::map<string, std::function<bool(vector<string>, ScriptOverseer*)>> IF_
         return so->parseArg(argv[0])->str() == so->parseArg(argv[2])->str();
     } },
     {"has_item", [](vector<string> argv, ScriptOverseer* so) {
-        // TODO
-        return true;
+        auto name = so->parseArg(argv[1])->str();
+        auto count = so->getGame()->getPlayer()->getInventory()->count(name);
+        return count > 0;
     } }
 };
+
 
 const std::map<string, func> FUNC_MAP = {
     { "print", [](ScriptOverseer* so, SObject** args, int argc) {
@@ -121,10 +123,21 @@ const std::map<string, func> FUNC_MAP = {
         macro->exec();
     } },
     { "opencontainer", [](ScriptOverseer* so, SObject** args, int argc) {
+        // std::cout << "Opening container" << std::endl;
         if (argc != 2) throw std::runtime_error("bad argument count for <opencontainer>");
         auto key = ((SRaw*)args[0])->get();
         auto top = args[1]->str();
-        throw std::runtime_error("opencontainer not implemented");
+        auto formatted = formatContainer(key);
+        if (so->isSet(formatted) && ((SInt*)so->get(formatted))->getValue()) {
+            so->getGame()->requestChoice(top + " is already looted.", "Ok");
+            return;
+        }
+        auto cm = so->getGame()->getContainerManager();
+        auto container = cm->get(key);
+        auto looted = so->getGame()->accessContainer(container, top);
+        so->set(formatted, new SInt(looted ? 1 : 0));
+        if (!looted) return;
+        so->getGame()->getPlayer()->getInventory()->addAll(container->getPairs());
     } },
     { "if", [](ScriptOverseer* so, SObject** args, int argc) {
         vector<string> argv;
@@ -189,7 +202,10 @@ const std::map<string, func> FUNC_MAP = {
     { "take", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <take>");
         auto name = args[0]->str();
-        throw std::runtime_error("take not implemented");
+        auto game = so->getGame();
+        auto itemManager = game->getItemManager();
+        auto item = itemManager->getItem(name);
+        game->getPlayer()->getInventory()->take(item);
     } },
 };
 

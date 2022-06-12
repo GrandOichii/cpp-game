@@ -10,5 +10,8 @@ for file in listdir('.'):
     if ext != SEEK_EXT:
         continue
     img = Image.open(file)
+    r, g, b, a = img.split()
+    img = Image.merge("RGB", (r, g, b))
     img.save(name + TARGET_EXT)
+
 

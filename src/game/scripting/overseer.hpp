@@ -8,8 +8,14 @@
 
 using std::string;
 
+static std::string formatContainer(std::string key) {
+    return "containers." + key;
+}
+
 namespace game {
+
 class Game;
+
 namespace scripting {
 
 class Script;
@@ -30,6 +36,7 @@ public:
     SObject * getValueOf(SRaw * object);
     void addMacro(std::string name, Script * macro);
     Script * getMacro(std::string name);
+    SObject * get(std::string key);
 };
 
 }

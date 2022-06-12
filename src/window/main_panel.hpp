@@ -11,7 +11,6 @@ private:
     AssetsManager *assets;
     game::Game *game;
     bool updateGame;
-    // InteractContext* iContext;
     bool focusedTiles[3][3]{};
     CircularBuffer<std::string>* logs;
     int tileCountX;
@@ -35,4 +34,5 @@ public:
     void updateLog(string message);
     void sleep(int amount);
     string requestChoice(string text, string choices);
+    bool accessContainer(game::items::Container* container, std::string top);
 };

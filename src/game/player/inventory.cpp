@@ -62,5 +62,17 @@ siMap Inventory::getSorted() {
     return result;
 }
 
+int Inventory::count(std::string itemName) {
+    for (const auto& pair : items)
+        if (pair.first->getName() == itemName)
+            return pair.second;
+    return 0;
+}
+
+void Inventory::addAll(std::vector<std::pair<items::Item*, int>> pairs) {
+    for (const auto& pair : pairs)
+        add(pair.first, pair.second);
+}
+
 }
 }

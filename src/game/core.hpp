@@ -8,6 +8,7 @@
 #include "player/player.hpp"
 #include "map/map.hpp"
 #include "items/manager.hpp"
+#include "items/container.hpp"
 #include "game_info.hpp"
 #include "scripting/overseer.hpp"
 #include "../util.hpp"
@@ -22,6 +23,7 @@ public:
     virtual void updateLog(string message) = 0;
     virtual void sleep(int amount) = 0;
     virtual string requestChoice(string text, string choices) = 0;
+    virtual bool accessContainer(items::Container* container, std::string top) = 0;
     virtual ~GameWrapper() = default;
 };
 
@@ -30,8 +32,9 @@ private:
     GameWrapper *wrapper;
     player::Player* player;
     scripting::ScriptOverseer* scriptOverseer;
-    GameInfo* gameInfo;
     items::ItemManager* itemManager;
+    items::ContainerManager* containerManager;
+    GameInfo* gameInfo;
     map::MapData* mapData;
     CircularBuffer<std::string> * logs;
 
@@ -60,8 +63,10 @@ public:
     void sleep(int amount);
     player::Player* getPlayer() const;
     string requestChoice(string text, string choices);
+    bool accessContainer(items::Container* container, std::string top);    
     vector<string> getLastLogs(int count);
     items::ItemManager* getItemManager();
+    items::ContainerManager* getContainerManager();
 };
 
 }

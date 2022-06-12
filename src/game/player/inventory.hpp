@@ -26,6 +26,8 @@ public:
     void add(items::Item* item);
     void add(items::Item* item, int amount);
     void take(items::Item* item);
+    int count(std::string itemName);
+    void addAll(std::vector<std::pair<items::Item*, int>> pairs);
     siMap getSorted();
 };
 

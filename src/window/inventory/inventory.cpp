@@ -73,13 +73,11 @@ void InventoryWindow::start() {
         }
         // draw
         parent->drawTexture(bg, this->x, this->y);
-        // print top
         for (int i = 0; i < menuCount; i++) {
             parent->drawRect(this->x + i * maxLabelWidth + MENU_LABELS_X_OFFSET, this->y + MENU_LABELS_Y_OFFSET, maxLabelWidth, fs, SDL_Color{0, 0, 150, 0}, i == menuI);
             parent->drawTexture(menuLabels[i], menuLabelXs[i], this->y + MENU_LABELS_Y_OFFSET);
         }
         menus[menuI]->draw(this->x, this->y + fs);
-        // print menu
         parent->flush();
     }
 }

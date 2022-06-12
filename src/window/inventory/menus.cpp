@@ -9,17 +9,17 @@
 Menu::Menu(InventoryWindow* parent) : parent(parent) {
 }
 
-ItemsSubMenu::ItemsSubMenu(vector<game::player::ItemStruct*> items, InventoryWindow* parent, AssetsManager* assets, game::Game* game) : Menu(parent), assets(assets), game(game) {
+ItemsSubMenu::ItemsSubMenu(vector<game::player::ItemStruct*> items, InventoryWindow* parent, AssetsManager* assets, game::Game* game) : Menu(parent), assets(assets), game(game){
+    // std::cout << "Creating sub menu" << std::endl;
     this->items = new ListTemplate<ItemSlot*>(MAX_ITEMS);
+    if (items.size() == 0) return;
     for (const auto& i : items)
         this->items->add(new ItemSlot(game, i, assets, parent->getParent()));
-
 }
 
 ItemsSubMenu::~ItemsSubMenu() {
     for (const auto& e : items->getAll()) delete e;
     delete items;
-
 }
 
 void ItemsSubMenu::rememberCurrent() {
@@ -28,6 +28,7 @@ void ItemsSubMenu::rememberCurrent() {
 }
 
 void ItemsSubMenu::draw(int x, int y) {
+    if (this->items->size() == 0) return;
     auto visible = items->getVisible();
     auto c = items->getCursor();
     for (int i = 0; i < visible.size(); i++) 
@@ -39,6 +40,8 @@ void ItemsSubMenu::handleKey(int key) {
         parent->close();
         return;
     }
+    if (items->size() == 0) return;
+    // std::cout << "moving" << std::endl;
     switch(key) {
     case SDLK_UP:
         rememberCurrent();
@@ -69,11 +72,18 @@ ItemsMenu::ItemsMenu(InventoryWindow* parent, AssetsManager* assets, game::Game*
     menus = new Menu*[menuCount];
     auto bg = assets->getInventoryBG();
     maxLabelWidth = (getSize(bg).x - 2 * MENU_LABELS_X_OFFSET) / menuCount ;
+    // for (auto it = sorted.begin(); it != sorted.end(); it++) {
+    //     std::cout << it->first << ":" << std::endl;
+    //     for (const auto& pair : it->second)
+    //         std::cout << "\t" << pair->item->getName() << std::endl;
+    // }
     for (int i = 0; i < menuCount; i++) {
         menuLabels[i] = assets->getMessage(ORDERED_LABELS[i]);
         auto it = sorted.find(ORDERED_LABELS[i]);
-        if (it == sorted.end()) throw std::runtime_error("unknown item category: " + ORDERED_LABELS[i]);
-        menus[i] = new ItemsSubMenu(it->second, parent, assets, game);
+        // if (it == sorted.end()) throw std::runtime_error("unknown item category: " + ORDERED_LABELS[i]);
+        vector<game::player::ItemStruct*> items(0);
+        if (it != sorted.end()) items = it->second;
+        menus[i] = new ItemsSubMenu(items, parent, assets, game);
     }
     menuLabelXs = new int[menuCount];
     for (int i = 0; i < menuCount; i++) {

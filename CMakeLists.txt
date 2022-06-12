@@ -12,6 +12,7 @@ file(GLOB srcFiles
     src/game/map/*.cpp
     src/game/scripting/*.cpp 
     src/game/player/*.cpp 
+    src/game/items/*.cpp
     # src/util.cpp
     # src/game/scripting/script.cpp
     # src/game/scripting/object.cpp

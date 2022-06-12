@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-#include "../util.hpp"
+#include "../../util.hpp"
 #include "../scripting/overseer.hpp"
 #include "item.hpp"
 
@@ -40,7 +40,7 @@ public:
     }
 
     void load(const string parentDir, const string path, game::scripting::ScriptOverseer* so) {
-        auto j = fs::readJS(fs::join(vector<string>{parentDir, path}));
+        auto j = fs::readJS(fs::join(std::vector<string>{parentDir, path}));
         auto basic = loadItems<BasicItem>(j, "basic");
         auto ammo = loadItems<AmmoItem>(j, "ammo");
         auto armor = loadItems<ArmorItem>(j, "armor");

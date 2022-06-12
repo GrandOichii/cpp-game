@@ -9,6 +9,7 @@
     "inventoryBG": "images/inventory/bg.bmp",
     "descriptionBG": "images/inventory/descriptionBG.bmp",
     "infoBG": "images/info/bg.bmp",
+    "containerBG": "images/container/bg.bmp",
     
     "tiles": {
         "index:wall": "images/tiles/wall.bmp",
@@ -34,9 +35,14 @@
 
     "items": {
         "rock": "images/items/rock.bmp",
-        "iron_helmet": "images/items/helmet.bmp",
-        "broadsword": "images/items/long_sword.bmp",
+        "door_key": "images/items/key.bmp",
+        "lamp": "images/items/lamp.bmp",
         "wooden_arrow": "images/items/arrow.bmp",
+        "iron_helmet": "images/items/helmet.bmp",
+        "iron_cuirass": "images/items/cuirass.bmp",
+        "wooden_bow": "images/items/bow.bmp",
+        "broadsword": "images/items/long_sword.bmp",
+        "wooden_stick": "images/items/stick.bmp",
         "_missing": "images/items/missing.bmp"
     }
 }

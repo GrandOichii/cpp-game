@@ -1,0 +1,17 @@
+{
+    "name": "rat",
+    "displayName": "Black rat",
+    "aggroRange": 3,
+    "combatRange": 1,
+    "minDamage": 2,
+    "maxDamage": 3,
+    "rewards": {
+        "gold": [10, 20],
+        "countable": {
+            "wooden_arrow": [1, 5]
+        },
+        "uncountable": {
+            "iron_helmet": 30
+        }
+    }
+}

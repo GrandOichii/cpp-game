@@ -11,8 +11,8 @@ def do():
     #     return
     # fname = sys.argv[1]
     # outdir = sys.argv[2]
-    fname = 'tilesets/Wooden Pixel Art GUI 32x32.png'
-    outdir = 'GUI'
+    fname = 'tilesets/DungeonCrawl_ProjectUtumnoTileset.png'
+    outdir = 'new'
     im = Image.open(fname)
     imgwidth = im.size[0]
     imgheight = im.size[1]

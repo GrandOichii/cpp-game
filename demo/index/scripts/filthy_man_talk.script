@@ -1,20 +1,20 @@
-give_stick {
-take "wooden_stick"
+give_lamp {
+take "lamp"
 log "Filthy man says: Thanks a lot! Here, take this."
 give "door_key"
 log "Filthy man gives you a key"
-set gave_stick 1
+set gave_lamp 1
 }
 
-prompt_to_give_stick {
-mb "Give the filthy man your stick?" "Yes_No"
-if _mbresult = "Yes" then run give_stick
+prompt_to_give_lamp {
+mb "Give the filthy man the lamp?" "Yes_No"
+if _mbresult = "Yes" then run give_lamp
 }
 
 talk_to_filthy_man {
-log "The filthy man says: Man, I could really use a wooden stick right now"
-if has_item "wooden_stick" then run prompt_to_give_stick
+log "I've lost my lamp, have you seen it?"
+if has_item "lamp" then run prompt_to_give_lamp
 }
 
-if set gave_stick then log "Thanks again for the stick!"
-if not set gave_stick then run talk_to_filthy_man
+if set gave_lamp then log "Filthy man says: Thanks again for the lamp, kind stranger!"
+if not set gave_lamp then run talk_to_filthy_man

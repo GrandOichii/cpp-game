@@ -80,6 +80,10 @@ public:
 
     }
 
+    int size() {
+        return items.size();
+    }
+
     void add(T item) { items.push_back(item); }
 
     void moveUp() {
@@ -122,6 +126,22 @@ public:
                 cursor = 0;
                 choice = 0;
             }
+        }
+    }
+
+    void scrollUp() {
+        if (maxAmount > items.size()) return;
+        page--;
+        if (page < 0) {
+            page = items.size() - maxAmount;
+        }
+    }
+
+    void scrollDown() {
+        if (maxAmount > items.size()) return;
+        page++;
+        if (page > items.size() - maxAmount) {
+            page = 0;
         }
     }
 

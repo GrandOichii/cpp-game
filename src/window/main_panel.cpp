@@ -2,9 +2,11 @@
 
 #include "inventory/inventory.hpp"
 #include "wrapper.hpp"
+#include "container.hpp"
 #include "context.hpp"
 #include "assets.hpp"
 #include "../game/core.hpp"
+#include "../game/items/container.hpp"
 #include "util.hpp"
 
 const std::map<int, Double> DIRECTION_MAP = {
@@ -104,7 +106,6 @@ void MainPanel::toggleFullscreen() {
     auto ll = this->game->getLastLogs(this->logs->getSize());
     for (const auto& m : ll) {
         if (m == "") continue;
-        std::cout << "\t" << m << std::endl;
         this->updateLog(m);
     }
 }
@@ -201,7 +202,6 @@ void MainPanel::updateLog(string message) {
     auto longt = assets->getMessage(message);
     auto mwidth = getSize(longt).x;
     int maxWidth = (message.size() * (this->logWidth)) / mwidth;
-    std::cout << maxWidth << std::endl;
     auto lines = str::widthSplit(message, maxWidth);
     for (int i = 0; i < lines.size(); i++) logs->add(lines[i]);
 }
@@ -215,5 +215,12 @@ void MainPanel::sleep(int amount) {
 
 string MainPanel::requestChoice(string text, string choices) {
     std::string result = showMessageBox(this->parent, this->assets, text, str::split(choices, "_"));
+    return result;
+}
+
+bool MainPanel::accessContainer(game::items::Container* container, std::string top) {
+    auto w = new ContainerWindow(this->parent, assets, container, top, 20, 20);
+    auto result = w->start();
+    delete w;
     return result;
 }

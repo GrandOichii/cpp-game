@@ -28,6 +28,7 @@ Game::Game(const char* path) {
     this->gameInfo = new GameInfo();
     this->mapData = new map::MapData();
     this->itemManager = new items::ItemManager();
+    this->containerManager = new items::ContainerManager();
     auto p = string(path);
 
     // load info
@@ -39,6 +40,9 @@ Game::Game(const char* path) {
     for (auto it = loadMap.begin(); it != loadMap.end(); it++) {
         it->second->load(p, it->first.c_str(), this->scriptOverseer);
     }
+    // load containers last, after items
+    containerManager->load(p, CONTAINERS_FILE.c_str(), this->scriptOverseer);
+
     this->logs = new CircularBuffer<std::string>(LOG_COUNT);
 }
 
@@ -50,11 +54,16 @@ items::ItemManager* Game::getItemManager() {
     return this->itemManager;
 }
 
+items::ContainerManager* Game::getContainerManager() {
+    return containerManager;
+}
+
 Game::~Game() {
     delete scriptOverseer;
     delete gameInfo;
     delete mapData;
     delete itemManager;
+    delete containerManager;
     delete logs;
     delete player;
 }
@@ -198,6 +207,10 @@ void Game::sleep(int amount) {
 
 string Game::requestChoice(string text, string choices) {
     return this->wrapper->requestChoice(text, choices);
+}
+
+bool Game::accessContainer(items::Container* container, std::string top) {
+    return this->wrapper->accessContainer(container, top);
 }
 
 vector<string> Game::getLastLogs(int count) {
