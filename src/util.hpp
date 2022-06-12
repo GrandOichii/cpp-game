@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <math.h>
 
 #include "nlohmann/json.hpp"
 
@@ -54,6 +55,83 @@ public:
             result.push_back(v[i]);
         return result;
     }
+};
+
+template<class T>
+class ListTemplate {
+private:
+    int cursor = 0;
+    int choice = 0;
+    int page = 0;
+    int maxAmount;
+    vector<T> items;
+public:
+    ListTemplate(int maxAmount) : maxAmount(maxAmount) {
+
+    }
+
+    void add(T item) { items.push_back(item); }
+
+    void moveUp() {
+        choice--;
+        cursor--;
+        auto size = items.size();
+        if (cursor < 0) {
+            if (size > maxAmount) {
+                if (page == 0) {
+                    cursor = maxAmount - 1;
+                    choice = size - 1;
+                    page = size - maxAmount;
+                } else {
+                    page--;
+                    cursor++;
+                }
+            } else {
+                cursor = size - 1;
+                choice = cursor;
+            }
+        }
+    }
+
+    void moveDown() {
+        choice++;
+        cursor++;
+        auto size = items.size();
+        if (size > maxAmount) {
+            if (cursor >= maxAmount) {
+                cursor--;
+                page++;
+                if (choice == size) {
+                    choice = 0;
+                    cursor = 0;
+                    page = 0;
+                }
+            }
+        } else {
+            if (cursor >= size) {
+                cursor = 0;
+                choice = 0;
+            }
+        }
+    }
+
+    vector<T> getVisible() { 
+        auto begin = items.begin() + page;
+        auto a = items.size();
+        if (maxAmount < a) a = maxAmount;
+        auto end = items.begin() + a;
+        return {begin, end+page}; 
+    }
+
+    vector<T> getAll() const { return items; }
+
+    bool hasMoreTop() { return page != 0; }
+
+    bool hasMoreBottom() { return false; }
+
+    int getCursor() { return cursor; }
+
+    T getCurrent() { return items[choice]; }
 };
 
 namespace str {

@@ -33,6 +33,8 @@ public:
     ~Window();
     void start();
     void drawTexture(SDL_Texture *texture, int x, int y);
+    void drawRect(int x, int y, int width, int height, SDL_Color color, bool fill);
+    void drawLine(int x1, int y1, int x2, int y2, SDL_Color color);
     void drawTextureMiddle(SDL_Texture *texture);
     void setCurrentContext(Context *context);
     void close();

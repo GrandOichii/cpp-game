@@ -1,5 +1,6 @@
 #include "main_panel.hpp"
 
+#include "inventory/inventory.hpp"
 #include "wrapper.hpp"
 #include "context.hpp"
 #include "assets.hpp"
@@ -192,7 +193,9 @@ void MainPanel::interactMode() {
 
 void MainPanel::inventoryMode() {
     // TODO
-    
+    auto w = new InventoryWindow(this->parent, this->assets, this->game);
+    w->start();
+    delete w;
 }
 
 void MainPanel::spellCastMode() {
@@ -216,7 +219,6 @@ void MainPanel::sleep(int amount) {
     this->parent->clear();
     this->draw();
     this->parent->flush();
-    std::cout << "Sleeping for " << amount << std::endl;
     SDL_Delay(amount);
 }
 

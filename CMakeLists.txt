@@ -7,13 +7,25 @@ project(game)
 file(GLOB srcFiles 
     src/*.cpp 
     src/window/*.cpp
-    src/window/main_panel.cpp
-    src/window/util.cpp
-    src/window/window.cpp
-    src/window/wrapper.cpp
+    src/window/inventory/*.cpp
     src/game/*.cpp
     src/game/map/*.cpp
     src/game/scripting/*.cpp 
+    src/game/player/*.cpp 
+    # src/util.cpp
+    # src/game/scripting/script.cpp
+    # src/game/scripting/object.cpp
+    # src/game/scripting/command.cpp
+    # src/game/scripting/overseer.cpp
+    # src/game/core.cpp
+    # src/game/map/room.cpp
+    # src/game/map/map.cpp
+    # src/game/map/tile.cpp
+    # src/window/wrapper.cpp
+    # src/window/util.cpp
+    # src/window/window.cpp
+    # src/window/main_panel.cpp
+    # src/main.cpp
 )
 
 add_executable(${PROJECT_NAME}

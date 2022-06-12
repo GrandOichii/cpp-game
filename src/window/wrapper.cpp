@@ -32,6 +32,7 @@ void Wrapper::setup() {
     auto tilePanel = new MainPanel(this);
     this->setCurrentContext(tilePanel);
     this->game->setWrapper(tilePanel);
+    this->game->createPlayer("Oichii");
     this->game->start();
 }
 

@@ -181,7 +181,10 @@ const std::map<string, func> FUNC_MAP = {
     { "give", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <give>");
         auto name = args[0]->str();
-        throw std::runtime_error("give not implemented");
+        auto game = so->getGame();
+        auto item = game->getItemManager()->getItem(name);
+        auto inventory = game->getPlayer()->getInventory();
+        inventory->add(item);
     } },
     { "take", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <take>");

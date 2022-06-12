@@ -1,10 +1,13 @@
 {
+    "font": "font/Alkhemikal.ttf",
     "icon": "images/icon.bmp",
     "player": "images/player.bmp",
-    "font": "images/font/Alkhemikal.ttf",
     "focused_tile": "images/tiles/cursor.bmp",
     "message_box": "images/message_box/mb.bmp",
     "logBG" : "images/log/bg.bmp",
+    
+    "inventoryBG": "images/inventory/bg.bmp",
+    "descriptionBG": "images/inventory/descriptionBG.bmp",
     
     "tiles": {
         "index:wall": "images/tiles/wall.bmp",
@@ -26,5 +29,13 @@
         "index:portal1": "images/tiles/portal.bmp",
         "index:portal2": "images/tiles/portal.bmp",
         "index:filthy_man": "images/tiles/man.bmp"
+    },
+
+    "items": {
+        "rock": "images/items/rock.bmp",
+        "iron_helmet": "images/items/helmet.bmp",
+        "broadsword": "images/items/long_sword.bmp",
+        "wooden_arrow": "images/items/arrow.bmp",
+        "_missing": "images/items/missing.bmp"
     }
 }

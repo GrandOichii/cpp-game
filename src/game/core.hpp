@@ -1,10 +1,13 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <vector>
 #include <math.h>
 
+#include "player/player.hpp"
 #include "map/map.hpp"
+#include "items/manager.hpp"
 #include "game_info.hpp"
 #include "scripting/overseer.hpp"
 #include "../util.hpp"
@@ -25,8 +28,10 @@ public:
 class Game {
 private:
     GameWrapper *wrapper;
+    player::Player* player;
     scripting::ScriptOverseer* scriptOverseer;
     GameInfo* gameInfo;
+    items::ItemManager* itemManager;
     map::MapData* mapData;
     CircularBuffer<std::string> * logs;
 
@@ -39,6 +44,7 @@ public:
     GameWrapper * getWrapper();
     Game(const char* path);
     ~Game();
+    void createPlayer(std::string name);
     GameInfo *getInfo() const;
     map::MapData *getMap() const;
     void setWindowSize(int width, int height);
@@ -52,8 +58,10 @@ public:
     vector<std::pair<int, int>> getAdjacentInteractableTiles();
     void interactAt(int xdiff, int ydiff);
     void sleep(int amount);
+    player::Player* getPlayer() const;
     string requestChoice(string text, string choices);
     vector<string> getLastLogs(int count);
+    items::ItemManager* getItemManager();
 };
 
 }

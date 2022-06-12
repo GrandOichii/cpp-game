@@ -41,6 +41,26 @@ void Window::drawTextureMiddle(SDL_Texture *texture) {
     this->drawTexture(texture, x, y);
 }
 
+void Window::drawRect(int x, int y, int width, int height, SDL_Color color, bool fill) {
+    SDL_SetRenderDrawColor( ren, color.r, color.g, color.b, 0 ); // last color.a?
+    SDL_Rect r;
+    r.x = x;
+    r.y = y;
+    r.w = width;
+    r.h = height;
+    if (fill)
+        SDL_RenderFillRect(this->ren, &r);
+    else SDL_RenderDrawRect(this->ren, &r);
+    SDL_SetRenderDrawColor(this->ren, 0, 0, 0, 0 );
+}
+
+void Window::drawLine(int x1, int y1, int x2, int y2, SDL_Color color) {
+    SDL_SetRenderDrawColor( ren, color.r, color.g, color.b, 0 ); // last color.a?
+    SDL_RenderDrawLine(ren, x1, y1, x2, y2);
+    SDL_SetRenderDrawColor(ren, 0, 0, 0, 0 );
+}
+
+
 void Window::handleKey(int key) {
     this->currentContext->handleKey(key);
 }

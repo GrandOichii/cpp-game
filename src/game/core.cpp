@@ -27,12 +27,14 @@ Game::Game(const char* path) {
     this->scriptOverseer = new scripting::ScriptOverseer(this);
     this->gameInfo = new GameInfo();
     this->mapData = new map::MapData();
+    this->itemManager = new items::ItemManager();
     auto p = string(path);
 
     // load info
     std::map<string, ILoadable*> loadMap = {
         {GAME_INFO_FILE, gameInfo},
-        {MAPDATA_FILE, mapData}
+        {MAPDATA_FILE, mapData},
+        {ITEMS_FILE, itemManager}
     };
     for (auto it = loadMap.begin(); it != loadMap.end(); it++) {
         it->second->load(p, it->first.c_str(), this->scriptOverseer);
@@ -40,11 +42,21 @@ Game::Game(const char* path) {
     this->logs = new CircularBuffer<std::string>(LOG_COUNT);
 }
 
+void Game::createPlayer(std::string name) {
+    this->player = new player::Player(name);
+}
+
+items::ItemManager* Game::getItemManager() {
+    return this->itemManager;
+}
+
 Game::~Game() {
     delete scriptOverseer;
     delete gameInfo;
     delete mapData;
+    delete itemManager;
     delete logs;
+    delete player;
 }
 
 GameInfo * Game::getInfo() const { 
@@ -192,5 +204,8 @@ vector<string> Game::getLastLogs(int count) {
     return this->logs->getLast(count);
 }
 
+player::Player* Game::getPlayer() const {
+    return this->player;
+}
 
 }
