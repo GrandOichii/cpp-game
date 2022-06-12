@@ -4,7 +4,7 @@
 #include "inventory.hpp"
 
 constexpr int SLOT_HEIGHT = 40;
-constexpr int SLOT_WIDTH = 400;
+constexpr int SLOT_WIDTH = 550;
 
 class ItemSlot {
 private:
@@ -18,6 +18,7 @@ private:
     int imageYOffset;
     int labelYOffset;
     int labelWidth;
+    int width;
 public:
     ItemSlot(game::Game* game, game::player::ItemStruct* item, AssetsManager* assets, Window* parent) : game(game), item(item), assets(assets), parent(parent) {
         this->renderer = parent->getRenderer();

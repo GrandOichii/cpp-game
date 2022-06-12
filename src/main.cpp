@@ -8,6 +8,6 @@ int main() {
 		delete w;
 	} catch (std::exception ex) {
 		delete w;
-		throw ex;
+		std::cout << ex.what() << std::endl;
 	}
 }

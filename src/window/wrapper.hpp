@@ -13,8 +13,10 @@ constexpr int CENTER_X = TILE_COUNT_X / 2 * TILE_HEIGHT;
 constexpr int LOG_Y = TILE_HEIGHT * TILE_COUNT_Y;
 constexpr int LOG_HEIGHT = 5 * TILE_HEIGHT;
 constexpr int LOG_WIDTH = TILE_COUNT_X * TILE_WIDTH;
+constexpr int INFO_WIDTH = 6 * TILE_WIDTH;
 constexpr int WINDOW_HEIGHT = LOG_Y + LOG_HEIGHT;
-constexpr int WINDOW_WIDTH = TILE_WIDTH * TILE_COUNT_X;
+constexpr int INFO_HEIGHT = WINDOW_HEIGHT;
+constexpr int WINDOW_WIDTH = TILE_WIDTH * TILE_COUNT_X + INFO_WIDTH;
 
 class Wrapper : public Window {
 private:
@@ -22,7 +24,6 @@ private:
     AssetsManager *assets;
     std::string assetsPath;
     void setup();
-
 public:
     Wrapper(std::string path, std::string assetsPath);
     ~Wrapper();

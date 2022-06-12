@@ -60,7 +60,6 @@ void Window::drawLine(int x1, int y1, int x2, int y2, SDL_Color color) {
     SDL_SetRenderDrawColor(ren, 0, 0, 0, 0 );
 }
 
-
 void Window::handleKey(int key) {
     this->currentContext->handleKey(key);
 }
@@ -83,6 +82,16 @@ void Window::draw() {
 void Window::toggleFullscreen() {
     this->fullscreen = !this->fullscreen;
     SDL_SetWindowFullscreen(win, this->fullscreen);
+}
+
+SDL_Window* Window::getWin() {
+    return win;
+}
+
+std::pair<int, int> Window::getWindowSize() {
+    int x, y;
+    SDL_GetWindowSize(win, &x, &y);
+    return std::make_pair(x, y);
 }
 
 void Window::start() {

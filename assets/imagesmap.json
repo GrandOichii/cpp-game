@@ -8,6 +8,7 @@
     
     "inventoryBG": "images/inventory/bg.bmp",
     "descriptionBG": "images/inventory/descriptionBG.bmp",
+    "infoBG": "images/info/bg.bmp",
     
     "tiles": {
         "index:wall": "images/tiles/wall.bmp",

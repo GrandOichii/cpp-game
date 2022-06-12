@@ -31,7 +31,7 @@ void ItemsSubMenu::draw(int x, int y) {
     auto visible = items->getVisible();
     auto c = items->getCursor();
     for (int i = 0; i < visible.size(); i++) 
-        visible[i]->draw(x + 10 + ITEMS_X_OFFSET, y + 10 + SLOT_HEIGHT * i + ITEMS_Y_OFFSET, i == c);
+        visible[i]->draw(x + 10 + ITEMS_X_OFFSET, y + SLOT_HEIGHT * i + ITEMS_Y_OFFSET, i == c);
 }
 
 void ItemsSubMenu::handleKey(int key) {

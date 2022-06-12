@@ -31,6 +31,8 @@ public:
     int getWidth();
     Window(int width, int height);
     ~Window();
+    SDL_Window* getWin();
+    std::pair<int, int> getWindowSize();
     void start();
     void drawTexture(SDL_Texture *texture, int x, int y);
     void drawRect(int x, int y, int width, int height, SDL_Color color, bool fill);

@@ -19,49 +19,13 @@ const std::map<int, Double> DIRECTION_MAP = {
     {'n'        , Double{ 1,  1}}
 };
 
-// InteractContext::InteractContext(Window *parent, AssetsManager *assets, std::function<void(void)> preDraw, std::function<void(Double, bool)> onClose) : Context(parent), assets(assets), preDraw(preDraw), onClose(onClose) {
-//     this->tex = assets->getMessage("[ Interact where? ]", SDL_Color{0, 255, 0, 0});
-//     auto size = getSize(this->tex);
-//     this->x = (WINDOW_WIDTH - size.x) / 2;
-// }
-
-// InteractContext::~InteractContext() {
-//     SDL_DestroyTexture(tex);
-//     delete logs;
-// }
-
-// void InteractContext::draw() {
-//     this->preDraw();
-//     this->parent->drawTexture(this->tex, this->x, 10);
-// }
-
-// void InteractContext::handleKey(int key) {
-//     if (key == SDLK_ESCAPE) {
-//         this->onClose(Double{0, 0}, false);
-//         return;
-//     }
-//     auto it = DIRECTION_MAP.find(key);
-//     if (it == DIRECTION_MAP.end()) return;
-//     this->onClose(it->second, true);
-// }
-
 MainPanel::MainPanel(Wrapper *parent) : Context(parent) {
+    this->tileCountX = TILE_COUNT_X;
+    this->logWidth = LOG_WIDTH;
+    this->centerX = this->tileCountX / 2 * TILE_HEIGHT;
     this->assets = parent->getAssets();
     this->game = parent->getGame();
     this->updateGame = true;
-    // auto preDraw = [this](){
-    //     this->draw();
-    // };
-    // auto onClose1 = [this](Double dir, bool interact){
-    //     this->clearFocused();
-    //     this->parent->setCurrentContext(this);
-    //     std::cout << "Context set to main" << std::endl;
-
-    //     // this->parent->draw();
-    //     if (!interact) return;
-    //     this->game->interactAt(dir.a[0], dir.a[1]);
-    // };
-    // this->iContext = new InteractContext(this->parent, assets, preDraw, onClose1);
     auto fs = assets->getFontSize();
     auto lineAmount = LOG_HEIGHT / fs;
     this->logs = new CircularBuffer<std::string>(lineAmount);
@@ -80,6 +44,7 @@ void MainPanel::clearFocused() {
 void MainPanel::draw() {
     this->drawTiles();
     this->drawLog();
+    this->drawInfo();
     this->drawPlayer();
     // update game
     if (this->updateGame) this->game->update();
@@ -87,8 +52,9 @@ void MainPanel::draw() {
 }
 
 void MainPanel::drawLog() {
-    auto tex = assets->getLogBackground();
-    this->parent->drawTexture(tex, 0, LOG_Y);
+    // auto tex = assets->getLogBackground();
+    // this->parent->drawTexture(tex, 0, LOG_Y);
+    this->parent->drawRect(0, LOG_Y, this->logWidth, LOG_HEIGHT, SDL_Color{80, 80, 80, 0}, true);
     auto lines = logs->getV();
     auto fs = this->assets->getFontSize();
     for (int i = 0; i < lines.size(); i++) {
@@ -113,12 +79,34 @@ void MainPanel::drawTiles() {
     for (int i = 0; i < 3; i++)
         for (int ii = 0; ii < 3; ii++)
             if (focusedTiles[i][ii])
-                this->parent->drawTexture(im, CENTER_X + (ii-1)*TILE_WIDTH, CENTER_Y + (i-1)*TILE_HEIGHT);
+                this->parent->drawTexture(im, this->centerX + (ii-1)*TILE_WIDTH, CENTER_Y + (i-1)*TILE_HEIGHT);
 }
 
 void MainPanel::drawPlayer() {
     auto im = this->assets->getPlayer();
-    this->parent->drawTexture(im, CENTER_X, CENTER_Y);
+    this->parent->drawTexture(im, this->centerX, CENTER_Y);
+}
+
+void MainPanel::drawInfo() {
+    auto bg = assets->getInfoBG();
+    this->parent->drawTexture(bg, this->tileCountX * TILE_WIDTH, 0);
+}
+
+void MainPanel::toggleFullscreen() {
+    this->parent->toggleFullscreen();
+    auto width = parent->getWindowSize().first;
+    this->tileCountX = (width - INFO_WIDTH) / TILE_WIDTH;
+    this->game->setWindowSize(tileCountX, TILE_COUNT_Y);
+    this->centerX = this->tileCountX / 2 * TILE_WIDTH;
+    // change update logs
+    this->logWidth = width - INFO_WIDTH;
+    this->logs->clear();
+    auto ll = this->game->getLastLogs(this->logs->getSize());
+    for (const auto& m : ll) {
+        if (m == "") continue;
+        std::cout << "\t" << m << std::endl;
+        this->updateLog(m);
+    }
 }
 
 void MainPanel::handleKey(int key) {
@@ -130,7 +118,7 @@ void MainPanel::handleKey(int key) {
     }
     switch (key) {
     case ('f'):
-        this->parent->toggleFullscreen();
+        this->toggleFullscreen();
         return;
     case ('e'):
         this->interactMode();
@@ -207,10 +195,13 @@ void MainPanel::consoleCommandMode() {
 }
 
 void MainPanel::updateLog(string message) {
+    // tex.x - 1
+    // 
     const int xOffset = 10;
     auto longt = assets->getMessage(message);
     auto mwidth = getSize(longt).x;
-    int maxWidth = (message.size() * (LOG_WIDTH-xOffset*2)) / mwidth;
+    int maxWidth = (message.size() * (this->logWidth)) / mwidth;
+    std::cout << maxWidth << std::endl;
     auto lines = str::widthSplit(message, maxWidth);
     for (int i = 0; i < lines.size(); i++) logs->add(lines[i]);
 }

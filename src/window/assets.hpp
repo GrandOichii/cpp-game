@@ -18,6 +18,7 @@ private:
     SDL_Texture* focusedTile = nullptr;
     SDL_Texture* logBG = nullptr;
     SDL_Texture* inventoryBG = nullptr;
+    SDL_Texture* infoBG = nullptr;
     SDL_Texture* descriptionBG = nullptr;
     SDL_Texture* newItemTex = nullptr;
     Font *font;
@@ -37,6 +38,7 @@ public:
         this->mbBackground = this->loadImage(fs::join(assetsPath, j["message_box"]).c_str());
         this->logBG = this->loadImage(fs::join(assetsPath, j["logBG"]).c_str());
         this->inventoryBG = this->loadImage(fs::join(assetsPath, j["inventoryBG"]).c_str());
+        this->infoBG = this->loadImage(fs::join(assetsPath, j["infoBG"]).c_str());
         this->descriptionBG = this->loadImage(fs::join(assetsPath, j["descriptionBG"]).c_str());
         this->font = new Font(fs::join(assetsPath, j["font"]).c_str(), fontSize, this->ren);
         this->newItemTex = font->get("[NEW]", SDL_Color{0, 255, 0, 0});;
@@ -61,6 +63,7 @@ public:
         SDL_DestroyTexture(mbBackground);
         SDL_DestroyTexture(inventoryBG);
         SDL_DestroyTexture(descriptionBG);
+        SDL_DestroyTexture(infoBG);
         SDL_DestroyTexture(newItemTex);
         for (auto it = tileMap.begin(); it != tileMap.end(); it++)
             SDL_DestroyTexture(it->second);        
@@ -71,6 +74,10 @@ public:
 
     SDL_Texture* getDescriptionBG() {
         return descriptionBG;
+    }
+
+    SDL_Texture* getInfoBG() {
+        return infoBG;
     }
 
     SDL_Texture* getNewItemTex() {

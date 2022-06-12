@@ -14,6 +14,9 @@ private:
     // InteractContext* iContext;
     bool focusedTiles[3][3]{};
     CircularBuffer<std::string>* logs;
+    int tileCountX;
+    int centerX;
+    int logWidth;
 public:
     MainPanel(Wrapper *parent);
     ~MainPanel();
@@ -22,7 +25,9 @@ public:
     void drawTiles();
     void drawLog();
     void drawPlayer();
+    void drawInfo();
     void handleKey(int key);
+    void toggleFullscreen();
     void interactMode();
     void inventoryMode();
     void spellCastMode();

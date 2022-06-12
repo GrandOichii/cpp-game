@@ -31,7 +31,11 @@ public:
     
     ~CircularBuffer(){
         delete[] b;
-    }   
+    }
+
+    int getSize() {
+        return size;
+    } 
     
     void add(T item)  {
         ++i;
@@ -54,6 +58,12 @@ public:
         for (int i = 0; i < count; i++)
             result.push_back(v[i]);
         return result;
+    }
+
+    void clear() {
+        delete[] b;
+        this->b = new T[size];
+        this->i = 0;
     }
 };
 
