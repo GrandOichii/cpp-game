@@ -56,3 +56,65 @@ void ItemsSubMenu::handleKey(int key) {
         delete w;
     }
 }
+
+const std::string ORDERED_LABELS[] = {"All", "Weapons", "Armor", "Ammo", "Other"};
+const int LABELS_COUNT = 5;
+
+ItemsMenu::ItemsMenu(InventoryWindow* parent, AssetsManager* assets, game::Game* game) : Menu(parent) {
+    auto player = game->getPlayer();
+    auto inventory = player->getInventory();
+    auto sorted = inventory->getSorted();
+    menuCount = LABELS_COUNT;
+    menuLabels = new SDL_Texture*[menuCount];
+    menus = new Menu*[menuCount];
+    auto bg = assets->getInventoryBG();
+    maxLabelWidth = (getSize(bg).x - 2 * MENU_LABELS_X_OFFSET) / menuCount ;
+    for (int i = 0; i < menuCount; i++) {
+        menuLabels[i] = assets->getMessage(ORDERED_LABELS[i]);
+        auto it = sorted.find(ORDERED_LABELS[i]);
+        if (it == sorted.end()) throw std::runtime_error("unknown item category: " + ORDERED_LABELS[i]);
+        menus[i] = new ItemsSubMenu(it->second, parent, assets, game);
+    }
+    menuLabelXs = new int[menuCount];
+    for (int i = 0; i < menuCount; i++) {
+        auto size = getSize(menuLabels[i]);
+        menuLabelXs[i] = (maxLabelWidth - size.x) / 2 + i*maxLabelWidth + MENU_LABELS_X_OFFSET;
+    }
+    this->fs = assets->getFontSize();
+}
+
+ItemsMenu::~ItemsMenu() {
+    for (int i = 0; i < menuCount; i++) {
+        delete menus[i];
+        SDL_DestroyTexture(menuLabels[i]);
+    }
+    delete[] menuLabelXs;
+    delete[] menuLabels;
+    delete[] menus;
+}
+
+void ItemsMenu::draw(int x, int y) {
+    for (int i = 0; i < menuCount; i++) {
+        parent->getParent()->drawRect(x + i * maxLabelWidth + MENU_LABELS_X_OFFSET, y + MENU_LABELS_Y_OFFSET, maxLabelWidth, fs, SDL_Color{255, 0, 0, 0}, i == menuI);
+        parent->getParent()->drawTexture(menuLabels[i], x + menuLabelXs[i], y + MENU_LABELS_Y_OFFSET);
+    }
+    menus[menuI]->draw(x, y + fs);
+}
+
+void ItemsMenu::handleKey(int key) {
+    if (key == SDLK_ESCAPE) {
+        this->parent->close();
+        return;
+    }
+    switch(key) {
+    case SDLK_LEFT:
+        menuI--;
+        if (menuI < 0) menuI = menuCount - 1;
+        return;
+    case SDLK_RIGHT:
+        menuI++;
+        if (menuI >= menuCount) menuI = 0;
+        return;
+    }
+    menus[menuI]->handleKey(key);
+}

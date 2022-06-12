@@ -2,35 +2,26 @@
 
 #include "menus.hpp"
 
-constexpr int MENU_LABELS_Y_OFFSET = 15;
-constexpr int MENU_LABELS_X_OFFSET = 15;
 
 InventoryWindow::InventoryWindow(Window* parent, AssetsManager* assets, game::Game* game) : parent(parent), assets(assets) {
-    auto player = game->getPlayer();
-    auto inventory = player->getInventory();
-    auto sorted = inventory->getSorted();
     this->bg = this->assets->getInventoryBG();
     auto bgSize = getSize(bg);
     this->x = (parent->getWidth() - bgSize.x) / 2;
     this->y = (parent->getHeight() - bgSize.y) / 2;
-    // auto items = sorted.find("All");
 
-    menuCount = LABELS_COUNT;
+    menuCount = 1;
     menuLabels = new SDL_Texture*[menuCount];
     menus = new Menu*[menuCount];
-    maxLabelWidth = (getSize(bg).x - 2 * MENU_LABELS_X_OFFSET) / menuCount ;
-    for (int i = 0; i < menuCount; i++) {
-        menuLabels[i] = assets->getMessage(ORDERED_LABELS[i]);
-        auto it = sorted.find(ORDERED_LABELS[i]);
-        if (it == sorted.end()) throw std::runtime_error("unknown item category: " + ORDERED_LABELS[i]);
-        menus[i] = new ItemsSubMenu(it->second, this, assets, game);
-    }
+    maxLabelWidth = (getSize(bg).x - 2 * MENU_LABELS_X_OFFSET) / menuCount;
+    menus[0] = new ItemsMenu(this, assets, game);
+    menuLabels[0] = assets->getMessage("Items");
     menuLabelXs = new int[menuCount];
     for (int i = 0; i < menuCount; i++) {
         auto size = getSize(menuLabels[i]);
         menuLabelXs[i] = this->x + (maxLabelWidth - size.x) / 2 + i*maxLabelWidth + MENU_LABELS_X_OFFSET;
     }
     this->fs = assets->getFontSize();
+
 }
 
 InventoryWindow::~InventoryWindow() {
@@ -84,10 +75,10 @@ void InventoryWindow::start() {
         parent->drawTexture(bg, this->x, this->y);
         // print top
         for (int i = 0; i < menuCount; i++) {
-            parent->drawRect(this->x + i * maxLabelWidth + MENU_LABELS_X_OFFSET, this->y + MENU_LABELS_Y_OFFSET, maxLabelWidth, fs, SDL_Color{255, 0, 0, 0}, i == menuI);
+            parent->drawRect(this->x + i * maxLabelWidth + MENU_LABELS_X_OFFSET, this->y + MENU_LABELS_Y_OFFSET, maxLabelWidth, fs, SDL_Color{0, 0, 150, 0}, i == menuI);
             parent->drawTexture(menuLabels[i], menuLabelXs[i], this->y + MENU_LABELS_Y_OFFSET);
         }
-        menus[menuI]->draw(this->x, this->y + 20);
+        menus[menuI]->draw(this->x, this->y + fs);
         // print menu
         parent->flush();
     }

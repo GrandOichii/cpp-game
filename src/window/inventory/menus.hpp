@@ -72,6 +72,19 @@ public:
     void handleKey(int key);
 };
 
-// class ItemsMenu : public Menu {
-
-// };
+class ItemsMenu : public Menu {
+private:
+    int maxLabelWidth;
+    int menuCount;
+    Menu** menus;
+    SDL_Texture** menuLabels;
+    int* menuLabelXs;
+    int menuI = 0;
+    int fs;
+public:
+    ItemsMenu(InventoryWindow* parent, AssetsManager* assets, game::Game* game);
+    ~ItemsMenu();
+    void rememberCurrent();
+    void draw(int x, int y);
+    void handleKey(int key);
+};

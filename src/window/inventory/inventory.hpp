@@ -16,9 +16,9 @@
 static constexpr int MAX_ITEMS = 10;
 static constexpr int ITEMS_Y_OFFSET = 30;
 static constexpr int ITEMS_X_OFFSET = 20;
+static constexpr int MENU_LABELS_Y_OFFSET = 15;
+static constexpr int MENU_LABELS_X_OFFSET = 15;
 
-const std::string ORDERED_LABELS[] = {"All", "Weapons", "Armor", "Ammo", "Other"};
-const int LABELS_COUNT = 5;
 
 class Menu;
 
