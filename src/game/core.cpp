@@ -239,4 +239,9 @@ player::ClassManager* Game::getClassManager() {
     return classManager;
 }
 
+scripting::ScriptOverseer* Game::getScriptOverseer() {
+    return scriptOverseer;
+}
+
+
 }

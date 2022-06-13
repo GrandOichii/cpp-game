@@ -2,6 +2,7 @@
 
 #include "../game/core.hpp"
 #include "../util.hpp"
+#include "command_line.hpp"
 #include "context.hpp"
 
 class Wrapper;
@@ -16,6 +17,7 @@ private:
     int tileCountX;
     int centerX;
     int logWidth;
+    CommandLine* commandLine;
 public:
     MainPanel(Wrapper *parent);
     ~MainPanel();

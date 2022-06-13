@@ -67,6 +67,82 @@ public:
     }
 };
 
+const std::string ALLOWED_CHARS = ",./<>?\" :";
+
+class LineEdit {
+private:
+    int maxWidth;
+    int cursor;
+    std::string text;
+public:
+    LineEdit(std::string text, int maxWidth) : maxWidth(maxWidth) {
+        this->setText(text);
+    }
+
+    void setText(std::string text) {
+        auto size = text.size();
+        if (size > maxWidth) throw std::runtime_error("can't set line edit: str length is bigger than max width");
+        this->text = text;
+        cursor = size;
+    }
+
+    std::string getText() {
+        return text;
+    }
+
+    void cursorLeft() {
+        cursor--;
+        if (cursor < 0) {
+            cursor = 0;
+        }
+    }
+
+    void cursorRight() {
+        cursor++;
+        auto size = text.size();
+        if (cursor >= size) {
+            cursor = size;
+        }
+    }
+
+    void eraseAtCursor() {
+        if (cursor == 0) {
+            return;
+        }
+        text.erase(cursor-1, 1);
+        cursor--;
+    }
+
+    int getCursor() {
+        return cursor;
+    }
+
+    bool addCharacter(char ch) {
+        if (text.size() == maxWidth) return false;
+        if ((ch >= 'a' && ch <= 'z') ||
+            (ch >= 'A' && ch <= 'Z') ||
+            (ch >= '0' && ch <= '9')) 
+        {
+            text.insert(text.begin()+cursor, ch);
+            cursor++;
+            return true;
+        }
+        for (int i = 0; i < ALLOWED_CHARS.size(); i++) {
+            if (ch == ALLOWED_CHARS[i]) {
+                text.insert(text.begin()+cursor, ch);
+                cursor++;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void clear() {
+        this->text = "";
+        this->cursor = 0;
+    }
+};
+
 template<class T>
 class ListTemplate {
 private:

@@ -72,6 +72,7 @@ public:
     items::ItemManager* getItemManager();
     items::ContainerManager* getContainerManager();
     player::ClassManager* getClassManager();
+    scripting::ScriptOverseer* getScriptOverseer();
 };
 
 }

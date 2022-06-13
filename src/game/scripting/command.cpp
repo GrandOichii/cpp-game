@@ -57,7 +57,6 @@ const std::map<string, std::function<bool(vector<string>, ScriptOverseer*)>> IF_
     } }
 };
 
-
 const std::map<string, func> FUNC_MAP = {
     { "print", [](ScriptOverseer* so, SObject** args, int argc) {
         if (argc != 1) throw std::runtime_error("bad argument count for <print>");

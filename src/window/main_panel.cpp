@@ -27,6 +27,7 @@ MainPanel::MainPanel(Wrapper *parent) : Context(parent) {
     this->centerX = this->tileCountX / 2 * TILE_HEIGHT;
     this->assets = parent->getAssets();
     this->game = parent->getGame();
+    this->commandLine = new CommandLine(parent, assets, game->getScriptOverseer(), 40, 20, WINDOW_HEIGHT - LOG_HEIGHT - assets->getFontSize());
     this->updateGame = true;
     auto fs = assets->getFontSize();
     auto lineAmount = LOG_HEIGHT / fs;
@@ -35,6 +36,7 @@ MainPanel::MainPanel(Wrapper *parent) : Context(parent) {
 
 MainPanel::~MainPanel() {
     // delete iContext;
+    delete commandLine;
 }
 
 void MainPanel::clearFocused() {
@@ -132,7 +134,7 @@ void MainPanel::handleKey(int key) {
         this->spellCastMode();
         // change if casting spells makes the game update
         return;
-    case ('~'):
+    case ('/'):
         this->consoleCommandMode();
         return;
     case (SDLK_ESCAPE):
@@ -192,7 +194,7 @@ void MainPanel::spellCastMode() {
 }
 
 void MainPanel::consoleCommandMode() {
-    // TODO
+    this->commandLine->show();
 }
 
 void MainPanel::updateLog(string message) {
