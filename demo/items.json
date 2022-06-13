@@ -37,7 +37,7 @@
         },
         {
             "name": "book2",
-            "displayName": "Quantum phisics book.",
+            "displayName": "Quantum phisics book",
             "description": "You can't read this book.",
             "intRequirement": 50,
             "targets": [

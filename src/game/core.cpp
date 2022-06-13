@@ -29,25 +29,38 @@ Game::Game(const char* path) {
     this->mapData = new map::MapData();
     this->itemManager = new items::ItemManager();
     this->containerManager = new items::ContainerManager();
+    this->classManager = new player::ClassManager();
     auto p = string(path);
 
-    // load info
+    // load items before everything else
+    itemManager->load(p, ITEMS_FILE.c_str(), this->scriptOverseer);
     std::map<string, ILoadable*> loadMap = {
         {GAME_INFO_FILE, gameInfo},
         {MAPDATA_FILE, mapData},
-        {ITEMS_FILE, itemManager}
+        {CONTAINERS_FILE, containerManager},
+        {CLASSES_FILE, classManager}
     };
     for (auto it = loadMap.begin(); it != loadMap.end(); it++) {
         it->second->load(p, it->first.c_str(), this->scriptOverseer);
     }
-    // load containers last, after items
-    containerManager->load(p, CONTAINERS_FILE.c_str(), this->scriptOverseer);
 
     this->logs = new CircularBuffer<std::string>(LOG_COUNT);
 }
 
-void Game::createPlayer(std::string name) {
-    this->player = new player::Player(name);
+std::string Game::createPlayer(std::string savesDir, std::string name, std::string className) {
+    player::PClass* pc = nullptr;
+    auto count = classManager->getCount();
+    auto classes = classManager->getClasses();
+    for (int i = 0; i < count; i++)
+        if (className == classes[i]->getName())
+            pc = classes[i];
+    if (!pc) throw std::runtime_error("no class with name " + className);
+    this->player = new player::Player(name, pc);
+    return "";
+}
+
+void Game::loadPlayer(std::string saveFile) {
+    
 }
 
 items::ItemManager* Game::getItemManager() {
@@ -60,6 +73,7 @@ items::ContainerManager* Game::getContainerManager() {
 
 Game::~Game() {
     delete scriptOverseer;
+    delete classManager;
     delete gameInfo;
     delete mapData;
     delete itemManager;
@@ -219,6 +233,10 @@ vector<string> Game::getLastLogs(int count) {
 
 player::Player* Game::getPlayer() const {
     return this->player;
+}
+
+player::ClassManager* Game::getClassManager() {
+    return classManager;
 }
 
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+
+#include "pclass.hpp"
 #include "inventory.hpp"
 #include "../entities/entity.hpp"
 
@@ -14,7 +16,7 @@ private:
     std::string name;
     Inventory* inventory;
 public:
-    Player(std::string name);
+    Player(std::string name, PClass* pClass);
     ~Player();
     Inventory* getInventory();
 };

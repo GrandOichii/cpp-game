@@ -34,6 +34,7 @@
     },
 
     "items": {
+        "wooden_stick": "images/items/stick.bmp",
         "rock": "images/items/rock.bmp",
         "door_key": "images/items/key.bmp",
         "lamp": "images/items/lamp.bmp",
@@ -42,7 +43,9 @@
         "iron_cuirass": "images/items/cuirass.bmp",
         "wooden_bow": "images/items/bow.bmp",
         "broadsword": "images/items/long_sword.bmp",
-        "wooden_stick": "images/items/stick.bmp",
+        "book1": "images/items/book1.bmp",
+        "book2": "images/items/book2.bmp",
+        "mega_book": "images/items/mega_book.bmp",
         "_missing": "images/items/missing.bmp"
     }
 }

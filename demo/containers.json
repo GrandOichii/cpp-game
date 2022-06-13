@@ -10,7 +10,9 @@
         "iron_leggings": 1
     },
     "chest3": {
-        "rock": 10
+        "book1": 1,
+        "book2": 1,
+        "mega_book": 1
     },
     "chest4": {
         "rock": 5

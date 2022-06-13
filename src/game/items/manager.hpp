@@ -20,6 +20,7 @@ static std::vector<Item*> loadItems(json j, std::string label) {
     for (const auto& [key, value] : items.items()) {
         auto item = new T(value);
         result.push_back(item);
+        // std::cout << item->getName() << std::endl;
     }
     return result;
 }
@@ -46,7 +47,8 @@ public:
         auto armor = loadItems<ArmorItem>(j, "armor");
         auto mWeapons = loadItems<MeleeWeapon>(j, "meleeWeapons");
         auto rWeapons = loadItems<RangedWeapon>(j, "rangedWeapons");
-        std::vector<std::vector<Item*>> v{basic, ammo, armor, mWeapons, rWeapons};
+        auto iBooks = loadItems<IncantationBookItem>(j, "incantationBooks");
+        std::vector<std::vector<Item*>> v{basic, ammo, armor, mWeapons, rWeapons, iBooks};
         this->itemCount = 0;
         for (auto const& sv : v) this->itemCount += sv.size();
         this->allItems = new Item*[this->itemCount];

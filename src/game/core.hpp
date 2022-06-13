@@ -5,12 +5,14 @@
 #include <vector>
 #include <math.h>
 
-#include "player/player.hpp"
+#include "scripting/overseer.hpp"
 #include "map/map.hpp"
 #include "items/manager.hpp"
 #include "items/container.hpp"
 #include "game_info.hpp"
-#include "scripting/overseer.hpp"
+#include "player/pclass.hpp"
+#include "player/player.hpp"
+
 #include "../util.hpp"
 
 using std::string;
@@ -31,6 +33,7 @@ class Game {
 private:
     GameWrapper *wrapper;
     player::Player* player;
+    player::ClassManager* classManager;
     scripting::ScriptOverseer* scriptOverseer;
     items::ItemManager* itemManager;
     items::ContainerManager* containerManager;
@@ -47,7 +50,8 @@ public:
     GameWrapper * getWrapper();
     Game(const char* path);
     ~Game();
-    void createPlayer(std::string name);
+    std::string createPlayer(std::string savesDir, std::string name, std::string className);
+    void loadPlayer(std::string saveFile);
     GameInfo *getInfo() const;
     map::MapData *getMap() const;
     void setWindowSize(int width, int height);
@@ -67,6 +71,7 @@ public:
     vector<string> getLastLogs(int count);
     items::ItemManager* getItemManager();
     items::ContainerManager* getContainerManager();
+    player::ClassManager* getClassManager();
 };
 
 }

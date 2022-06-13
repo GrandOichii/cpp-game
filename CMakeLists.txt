@@ -4,6 +4,7 @@ set (CMAKE_CXX_STANDARD 17)
 
 project(game)
 
+# ! reconfigure when adding new cpp files
 file(GLOB srcFiles 
     src/*.cpp 
     src/window/*.cpp
@@ -13,6 +14,7 @@ file(GLOB srcFiles
     src/game/scripting/*.cpp 
     src/game/player/*.cpp 
     src/game/items/*.cpp
+    # src/game/player/pclass.cpp 
     # src/util.cpp
     # src/game/scripting/script.cpp
     # src/game/scripting/object.cpp

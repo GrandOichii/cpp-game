@@ -53,7 +53,7 @@ enum Attribute {
     STR,
     AGI,
     INT,
-    WIC,
+    WIS,
     LUC
 };
 
@@ -62,7 +62,7 @@ const std::map<std::string, Attribute> ATTRIBUTE_MAP = {
     {"STR", Attribute::STR},
     {"AGI", Attribute::AGI},
     {"INT", Attribute::INT},
-    {"WIC", Attribute::WIC},
+    {"WIS", Attribute::WIS},
     {"LUC", Attribute::LUC}
 };
 

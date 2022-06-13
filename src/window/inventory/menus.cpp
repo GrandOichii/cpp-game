@@ -60,8 +60,8 @@ void ItemsSubMenu::handleKey(int key) {
     }
 }
 
-const std::string ORDERED_LABELS[] = {"All", "Weapons", "Armor", "Ammo", "Other"};
-const int LABELS_COUNT = 5;
+const std::string ORDERED_LABELS[] = {"All", "Weapons", "Armor", "Ammo", "Books", "Other"};
+const int LABELS_COUNT = 6;
 
 ItemsMenu::ItemsMenu(InventoryWindow* parent, AssetsManager* assets, game::Game* game) : Menu(parent) {
     auto player = game->getPlayer();
@@ -72,11 +72,6 @@ ItemsMenu::ItemsMenu(InventoryWindow* parent, AssetsManager* assets, game::Game*
     menus = new Menu*[menuCount];
     auto bg = assets->getInventoryBG();
     maxLabelWidth = (getSize(bg).x - 2 * MENU_LABELS_X_OFFSET) / menuCount ;
-    // for (auto it = sorted.begin(); it != sorted.end(); it++) {
-    //     std::cout << it->first << ":" << std::endl;
-    //     for (const auto& pair : it->second)
-    //         std::cout << "\t" << pair->item->getName() << std::endl;
-    // }
     for (int i = 0; i < menuCount; i++) {
         menuLabels[i] = assets->getMessage(ORDERED_LABELS[i]);
         auto it = sorted.find(ORDERED_LABELS[i]);
