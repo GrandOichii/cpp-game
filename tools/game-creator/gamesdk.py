@@ -271,7 +271,8 @@ NUMBER_KEYS = [
     'maxDamage',
     'damage',
     'range',
-    'intRequirement'
+    'intRequirement',
+    'armorRating'
     # ADD ITEM TYPES HERE
 ]
 
@@ -285,7 +286,6 @@ class ItemData:
             self.__dict__[key] = ''
             if key in NUMBER_KEYS or key in ATTRIBUTES:
                 self.__dict__[key] = 0
-        _=1
         
     def load(itype: str, data: dict) -> 'ItemData':
         result = ItemData()
@@ -557,8 +557,8 @@ class GameObject:
             result.items += extract_items('armor', data['armor'])
             result.items += extract_items('ammo', data['ammo'])
             result.items += extract_items('incantation book', data['incantationBooks'])
-            result.items += extract_items('ranged weapon', data['weapons']['ranged'])
-            result.items += extract_items('melee weapon', data['weapons']['melee'])
+            result.items += extract_items('ranged weapon', data['rangedWeapons'])
+            result.items += extract_items('melee weapon', data['meleeWeapons'])
             # ADD ITEM TYPES HERE
         # load the containers
         with open(os.path.join(path, CONTAINERS_FILE), 'r') as f:
@@ -653,12 +653,13 @@ class GameObject:
             data['basic'] = []
             data['ammo'] = []
             data['armor'] = []
-            data['weapons'] = {'ranged': [], 'melee': []}
+            data['rangedWeapons'] = []
+            data['meleeWeapons'] = []
             m = {
                 'basic': data['basic'],
                 'ammo': data['ammo'],
-                'melee weapon': data['weapons']['melee'],
-                'ranged weapon': data['weapons']['ranged'],
+                'melee weapon': data['meleeWeapons'],
+                'ranged weapon': data['rangedWeapons'],
                 'armor': data['armor'],
                 'incantation book': data['incantationBooks']
             }
