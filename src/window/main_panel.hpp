@@ -37,4 +37,5 @@ public:
     void sleep(int amount);
     string requestChoice(string text, string choices);
     bool accessContainer(game::items::Container* container, std::string top);
+    void updatePlayerLook();
 };

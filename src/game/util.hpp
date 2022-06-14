@@ -13,6 +13,7 @@ public:
 
 class IDescribable {
 public:
+    virtual int getOperations() = 0;
     virtual string getBigDescription(int amount) = 0;
 };
 

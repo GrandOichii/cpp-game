@@ -11,10 +11,14 @@ string Item::getName() { return name; }
 string Item::getDisplayName() { return displayName; }
 string Item::getDescription() { return description; }
 
-Item::Item(json j, bool stackable) : stackable(stackable) {
+Item::Item(json j, bool stackable, bool canTake) : stackable(stackable), ct(canTake) {
     this->name = j["name"];
     this->displayName = j["displayName"];
     this->description = j["description"];
+}
+
+bool Item::canTake() {
+    return ct;
 }
 
 string Item::getBigDescription(int amount) {
@@ -32,11 +36,11 @@ int Item::getOperations() { return CLOSE_OPERATION; }
 void Item::setKnown(bool value) { this->known = value; }
 bool Item::isKnown() { return known; }
 
-BasicItem::BasicItem(json j) : Item(j, false) {}
+BasicItem::BasicItem(json j) : Item(j, false, true) {}
 string BasicItem::category() { return "Other"; }
 string BasicItem::additionalDescriptionInfo() { return ""; }
 
-AmmoItem::AmmoItem(json j) : Item(j, true) {
+AmmoItem::AmmoItem(json j) : Item(j, true, true) {
     this->damage = j["damage"];
     auto it1 = DAMAGE_TYPE_MAP.find(j["damageType"]);
     if (it1 == DAMAGE_TYPE_MAP.end()) throw std::runtime_error("unknown damage type: " + (string)j["damageType"]);
@@ -67,7 +71,7 @@ string AmmoItem::additionalDescriptionInfo() {
     return result;
 }
 
-EquipableItem::EquipableItem(json j) : Item(j, false) {
+EquipableItem::EquipableItem(json j) : Item(j, false, false) {
     auto it = EQUIP_SLOT_MAP.find(j["slot"]);
     if (it == EQUIP_SLOT_MAP.end()) throw std::runtime_error("unknown equip slot: " + (string)j["slot"]);
     slot = it->second;
@@ -77,6 +81,11 @@ EquipableItem::EquipableItem(json j) : Item(j, false) {
         requirements.insert(std::make_pair(it->second, value));
     }
 }
+
+EquipSlot EquipableItem::getSlot() {
+    return slot;
+}
+
 
 string EquipableItem::additionalDescriptionInfo() {
     string result = "Requirements:\n";
@@ -130,8 +139,12 @@ RangedWeapon::RangedWeapon(json j) : Weapon(j) {
     if (it == AMMO_TYPE_MAP.end()) throw std::runtime_error("unknown ammo type: " + (string)j["ammoType"]);
 }
 
-UsableItem::UsableItem(json j, bool stackable) : Item(j, stackable) {
+UsableItem::UsableItem(json j, bool stackable) : Item(j, stackable, true) {
 
+}
+
+int UsableItem::getOperations() {
+    return USE_OPERATION | CLOSE_OPERATION;
 }
 
 IncantationBookItem::IncantationBookItem(json j) : UsableItem(j, false) {
@@ -139,7 +152,10 @@ IncantationBookItem::IncantationBookItem(json j) : UsableItem(j, false) {
 }
 
 void IncantationBookItem::use(Game* game) {
+    // TODO
     std::cout << "Using " << this->name << std::endl;
+    // remove item from inventory
+    game->getPlayer()->getInventory()->take(this);
 }
 
 string IncantationBookItem::category() {

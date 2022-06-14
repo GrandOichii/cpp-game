@@ -226,3 +226,7 @@ bool MainPanel::accessContainer(game::items::Container* container, std::string t
     delete w;
     return result;
 }
+
+void MainPanel::updatePlayerLook() {
+    // TODO
+}

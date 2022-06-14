@@ -24,7 +24,7 @@ void Inventory::add(items::Item* item, int amount) {
 }
 
 void Inventory::take(items::Item* item) {
-    if (item->category() != "Other") throw std::runtime_error("can't take non-basic item " + item->getName());
+    if (!item->canTake()) throw std::runtime_error("can't take item " + item->getName());
     for (auto& pair : items) {
         if (pair.first == item) {
             pair.second--;

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <map>
-#include <string>
+#include <vector>
+#include <string> // for some idiotic reason removing this break the whole file
 
 namespace game {
 
@@ -37,7 +38,8 @@ enum EquipSlot {
     TORSO,
     LEGS,
     ARM,
-    ARMS
+    ARMS,
+    FINGER
 };
 
 const std::map<std::string, EquipSlot> EQUIP_SLOT_MAP = {
@@ -45,7 +47,43 @@ const std::map<std::string, EquipSlot> EQUIP_SLOT_MAP = {
     {"TORSO", EquipSlot::TORSO},
     {"LEGS", EquipSlot::LEGS},
     {"ARM", EquipSlot::ARM},
-    {"ARMS", EquipSlot::ARMS}
+    {"ARMS", EquipSlot::ARMS},
+    {"FINGER", EquipSlot::FINGER}
+};
+
+std::string toString(EquipSlot slot);
+
+enum PlayerSlot {
+    P_HEAD,
+    P_TORSO,
+    P_LEGS,
+    P_ARM1,
+    P_ARM2,
+    P_ARMS,
+    P_FINGER1,
+    P_FINGER2
+};
+
+const std::map<std::string, PlayerSlot> PLAYER_SLOT_MAP = {
+    {"HEAD", PlayerSlot::P_HEAD},
+    {"TORSO", PlayerSlot::P_TORSO},
+    {"LEGS", PlayerSlot::P_LEGS},
+    {"ARM1", PlayerSlot::P_ARM1},
+    {"ARM2", PlayerSlot::P_ARM2},
+    {"ARMS", PlayerSlot::P_ARMS},
+    {"FINGER1", PlayerSlot::P_FINGER1},
+    {"FINGER2", PlayerSlot::P_FINGER2},
+};
+
+std::string toString(PlayerSlot slot);
+
+const std::map<EquipSlot, std::vector<PlayerSlot>> SLOT_CORRELATION_MAP = {
+    {EquipSlot::ARM, {PlayerSlot::P_ARM1, PlayerSlot::P_ARM2}},
+    {EquipSlot::ARMS, {PlayerSlot::P_ARMS}},
+    {EquipSlot::HEAD, {PlayerSlot::P_HEAD}},
+    {EquipSlot::TORSO, {PlayerSlot::P_TORSO}},
+    {EquipSlot::LEGS, {PlayerSlot::P_LEGS}},
+    {EquipSlot::FINGER, {PlayerSlot::P_FINGER1, PlayerSlot::P_FINGER2}}
 };
 
 enum Attribute {

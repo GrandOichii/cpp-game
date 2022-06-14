@@ -64,6 +64,11 @@ public:
             key = ':';
             shift = false;
             break;
+        case '-':
+            if (!shift) break;
+            key = '_';
+            shift = false;
+            break;
         }
         update = line->addCharacter(key - shift*32);
     }

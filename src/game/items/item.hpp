@@ -19,26 +19,28 @@ namespace items {
 class Item : public IDescribable {
 private:
     bool stackable;
+    bool ct;
     bool known = false;
 protected:
     string name;
     string displayName;
     string description;
 public:
+    bool canTake();
     bool isStackable();
     string getName();
     string getDisplayName();
     string getDescription();
     virtual ~Item() = default;
 
-    Item(json j, bool stackable);
+    Item(json j, bool stackable, bool canTake);
 
     string getBigDescription(int amount);
 
     virtual string category() = 0;
     virtual string additionalDescriptionInfo() = 0;
 
-    virtual int getOperations();
+    int getOperations();
     void setKnown(bool value);
     bool isKnown();
 };
@@ -69,6 +71,8 @@ private:
     std::map<Attribute, int> requirements;
 public:
     EquipableItem(json j);
+
+    EquipSlot getSlot();
 
     virtual string extendedDisplayName() = 0;
 
@@ -124,6 +128,7 @@ private:
 public:
     UsableItem(json j, bool stackable);
     virtual void use(Game* game) = 0;
+    int getOperations() override;
 };
 
 class IncantationBookItem : public UsableItem {

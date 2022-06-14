@@ -26,6 +26,7 @@ public:
     virtual void sleep(int amount) = 0;
     virtual string requestChoice(string text, string choices) = 0;
     virtual bool accessContainer(items::Container* container, std::string top) = 0;
+    virtual void updatePlayerLook() = 0;
     virtual ~GameWrapper() = default;
 };
 
@@ -73,6 +74,7 @@ public:
     items::ContainerManager* getContainerManager();
     player::ClassManager* getClassManager();
     scripting::ScriptOverseer* getScriptOverseer();
+    void updatePlayerLook();
 };
 
 }

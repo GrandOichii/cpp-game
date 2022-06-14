@@ -67,7 +67,7 @@ public:
     }
 };
 
-const std::string ALLOWED_CHARS = ",./<>?\" :";
+const std::string ALLOWED_CHARS = "_,./<>?\" :";
 
 class LineEdit {
 private:

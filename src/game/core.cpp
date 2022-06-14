@@ -243,5 +243,8 @@ scripting::ScriptOverseer* Game::getScriptOverseer() {
     return scriptOverseer;
 }
 
+void Game::updatePlayerLook() {
+    this->wrapper->updatePlayerLook();
+}
 
 }
