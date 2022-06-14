@@ -78,5 +78,14 @@ std::vector<std::pair<PlayerSlot, items::EquipableItem*>> Player::getEquipLines(
     return result;
 }
 
+std::vector<items::EquipableItem*> Player::getAllEquipment() {
+    std::vector<items::EquipableItem*> result;
+    for (auto it = equipment.begin(); it != equipment.end(); it++)
+        if (it->second)
+            result.push_back(it->second);
+    return result;
+}
+
+
 }
 }

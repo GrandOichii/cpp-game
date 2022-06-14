@@ -34,18 +34,51 @@
     },
 
     "items": {
-        "wooden_stick": "images/items/stick.bmp",
-        "rock": "images/items/rock.bmp",
-        "door_key": "images/items/key.bmp",
-        "lamp": "images/items/lamp.bmp",
-        "wooden_arrow": "images/items/arrow.bmp",
-        "iron_helmet": "images/items/helmet.bmp",
-        "iron_cuirass": "images/items/cuirass.bmp",
-        "wooden_bow": "images/items/bow.bmp",
-        "broadsword": "images/items/long_sword.bmp",
-        "book1": "images/items/book1.bmp",
-        "book2": "images/items/book2.bmp",
-        "mega_book": "images/items/mega_book.bmp",
+        "wooden_stick": {
+            "inventory": "images/items/inventory/stick.bmp",
+            "apparel": "images/items/apparel/stick.bmp"
+        },
+        "rock": {
+            "inventory": "images/items/inventory/rock.bmp"
+        },
+        "door_key": {
+            "inventory": "images/items/inventory/key.bmp"
+        },
+        "lamp": {
+            "inventory": "images/items/inventory/lamp.bmp"
+        },
+        "wooden_arrow": {
+            "inventory": "images/items/inventory/arrow.bmp"
+        },
+        "iron_helmet": {
+            "inventory": "images/items/inventory/helmet.bmp",
+            "apparel": "images/items/apparel/helmet.bmp"
+        },
+        "iron_cuirass": {
+            "inventory": "images/items/inventory/cuirass.bmp",
+            "apparel": "images/items/apparel/cuirass.bmp"
+        },
+        "iron_leggings": {
+            "inventory": "images/items/missing.bmp",
+            "apparel": "images/items/apparel/leggins.bmp"
+        },
+        "wooden_bow": {
+            "inventory": "images/items/inventory/bow.bmp",
+            "apparel": "images/items/apparel/bow.bmp"
+        },
+        "broadsword": {
+            "inventory": "images/items/inventory/long_sword.bmp",
+            "apparel": "images/items/apparel/sword.bmp"
+        },
+        "book1": {
+            "inventory": "images/items/inventory/book1.bmp"
+        },
+        "book2": {
+            "inventory": "images/items/inventory/book2.bmp"
+        },
+        "mega_book": {
+            "inventory": "images/items/inventory/mega_book.bmp"
+        },
         "_missing": "images/items/missing.bmp"
     }
 }

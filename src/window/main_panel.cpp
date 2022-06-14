@@ -89,6 +89,9 @@ void MainPanel::drawTiles() {
 void MainPanel::drawPlayer() {
     auto im = this->assets->getPlayer();
     this->parent->drawTexture(im, this->centerX, CENTER_Y);
+    for (const auto& tex : apparel)
+        this->parent->drawTexture(tex, this->centerX, CENTER_Y);
+
 }
 
 void MainPanel::drawInfo() {
@@ -198,8 +201,6 @@ void MainPanel::consoleCommandMode() {
 }
 
 void MainPanel::updateLog(string message) {
-    // tex.x - 1
-    // 
     const int xOffset = 10;
     auto longt = assets->getMessage(message);
     auto mwidth = getSize(longt).x;
@@ -229,4 +230,8 @@ bool MainPanel::accessContainer(game::items::Container* container, std::string t
 
 void MainPanel::updatePlayerLook() {
     // TODO
+    apparel.clear();
+    auto items = game->getPlayer()->getAllEquipment();
+    for (const auto& item : items)
+        apparel.push_back(assets->getApparelItem(item->getName()));
 }

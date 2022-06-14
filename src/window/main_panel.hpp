@@ -18,6 +18,7 @@ private:
     int centerX;
     int logWidth;
     CommandLine* commandLine;
+    vector<SDL_Texture*> apparel;
 public:
     MainPanel(Wrapper *parent);
     ~MainPanel();

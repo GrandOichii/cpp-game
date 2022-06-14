@@ -24,7 +24,8 @@ private:
     SDL_Texture* newItemTex = nullptr;
     Font *font;
     std::map<std::string, SDL_Texture*> tileMap;
-    std::map<std::string, SDL_Texture*> itemTextures; // first - picture
+    std::map<std::string, SDL_Texture*> itemTextures;
+    std::map<std::string, SDL_Texture*> apparelTextures;
 public:
     AssetsManager(const std::string assetsPath, int fontSize, SDL_Renderer *ren, game::Game* game) : ren(ren), fontSize(fontSize) {
         auto j = fs::readJS(fs::join(vector<string>{assetsPath, "imagesmap.json"}));
@@ -45,15 +46,20 @@ public:
         this->font = new Font(fs::join(assetsPath, j["font"]).c_str(), fontSize, this->ren);
         this->newItemTex = font->get("[NEW]", SDL_Color{0, 255, 0, 0});;
 
-        auto itemJ = j["items"];
-        auto missing = this->loadImage(fs::join(assetsPath, itemJ["_missing"]).c_str());
+        auto itemsJ = j["items"];
+        auto missing = this->loadImage(fs::join(assetsPath, itemsJ["_missing"]).c_str());
         auto im = game->getItemManager();
         auto items = im->getAllItems();
         int count = im->getItemCount();
         for (int i = 0; i < count; i++) {
             auto image = missing;
             auto name = items[i]->getName();
-            if (itemJ.contains(name)) image = this->loadImage(fs::join(assetsPath, itemJ[name]).c_str());
+            if (itemsJ.contains(name)) {
+                auto ij = itemsJ[name];
+                image = this->loadImage(fs::join(assetsPath, ij["inventory"]).c_str());
+                if (ij.contains("apparel"))
+                    this->apparelTextures[name] = this->loadImage(fs::join(assetsPath, ij["apparel"]).c_str());
+            }
             itemTextures[name] = image;
         }
     }
@@ -70,6 +76,8 @@ public:
         for (auto it = tileMap.begin(); it != tileMap.end(); it++)
             SDL_DestroyTexture(it->second);        
         for (auto it = itemTextures.begin(); it != itemTextures.end(); it++)
+            SDL_DestroyTexture(it->second);
+        for (auto it = apparelTextures.begin(); it != apparelTextures.end(); it++)
             SDL_DestroyTexture(it->second);
         delete font;
     }
@@ -97,6 +105,12 @@ public:
     SDL_Texture* getItemTexture(std::string name) {
         auto it = itemTextures.find(name);
         if (it == itemTextures.end()) throw std::runtime_error("to textures for item " + name);
+        return it->second;
+    }
+
+    SDL_Texture* getApparelItem(std::string name) {
+        auto it = apparelTextures.find(name);
+        if (it == apparelTextures.end()) throw std::runtime_error("to textures for apparel item " + name);
         return it->second;
     }
 

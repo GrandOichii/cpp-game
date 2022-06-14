@@ -28,6 +28,7 @@ public:
     void equip(PlayerSlot slot, items::EquipableItem* item, Game* game);
     items::EquipableItem* getEquipped(PlayerSlot slot);
     std::vector<std::pair<PlayerSlot, items::EquipableItem*>> getEquipLines(EquipSlot slot);
+    std::vector<items::EquipableItem*> getAllEquipment();
 };
 
 }
