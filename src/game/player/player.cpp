@@ -19,6 +19,7 @@ Player::Player(std::string name, PClass* pClass) : Entity(), name(name) {
     equipment.insert(std::make_pair(PlayerSlot::P_HEAD, nullptr));
     equipment.insert(std::make_pair(PlayerSlot::P_TORSO, nullptr));
     equipment.insert(std::make_pair(PlayerSlot::P_LEGS, nullptr));
+    this->className = pClass->getName();
 }
 
 items::EquipableItem* Player::getEquipped(PlayerSlot slot) {
@@ -86,6 +87,33 @@ std::vector<items::EquipableItem*> Player::getAllEquipment() {
     return result;
 }
 
+std::string Player::getName() {
+    return name;
+}
+
+std::string Player::getClassName() {
+    return className;
+}
+
+int Player::getMaxHealth() {
+    // TODO max health amount in influenced by items
+    return 10;
+}
+
+int Player::getCurrentHealth() {
+    // TODO
+    return 10;
+}
+
+int Player::getMaxMana() {
+    // TODO max mana amount in influenced by items
+    return 10;
+}
+
+int Player::getCurrentMana() {
+    // TODO
+    return 10;
+}
 
 }
 }

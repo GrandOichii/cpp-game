@@ -14,6 +14,7 @@ file(GLOB srcFiles
     src/game/scripting/*.cpp 
     src/game/player/*.cpp 
     src/game/items/*.cpp
+    src/game/spells/*.cpp
     # src/game/player/pclass.cpp 
     # src/util.cpp
     # src/game/scripting/script.cpp

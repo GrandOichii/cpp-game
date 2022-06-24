@@ -19,6 +19,7 @@ class Inventory;
 class Player : public entities::Entity {
 private:
     std::string name;
+    std::string className;
     Inventory* inventory;
     std::map<PlayerSlot, items::EquipableItem*> equipment;
 public:
@@ -29,6 +30,15 @@ public:
     items::EquipableItem* getEquipped(PlayerSlot slot);
     std::vector<std::pair<PlayerSlot, items::EquipableItem*>> getEquipLines(EquipSlot slot);
     std::vector<items::EquipableItem*> getAllEquipment();
+
+    std::string getName();
+    std::string getClassName();
+
+    int getMaxHealth();
+    int getCurrentHealth();
+    int getMaxMana();
+    int getCurrentMana();
+
 };
 
 }

@@ -19,9 +19,15 @@ private:
     int logWidth;
     CommandLine* commandLine;
     vector<SDL_Texture*> apparel;
+
+    // SDL_Texture* nameLabelTex;
+    // SDL_Texture* nameTex;
+    // SDL_Texture* classLabelTex;
+    // SDL_Texture* classTex;
 public:
     MainPanel(Wrapper *parent);
     ~MainPanel();
+    // void setupInfo();
     void clearFocused();
     void draw();
     void drawTiles();

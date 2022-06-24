@@ -7,6 +7,8 @@
 #include "assets.hpp"
 #include "../game/core.hpp"
 #include "../game/items/container.hpp"
+#include "../game/spells/builder.hpp"
+
 #include "util.hpp"
 
 const std::map<int, Double> DIRECTION_MAP = {
@@ -31,12 +33,24 @@ MainPanel::MainPanel(Wrapper *parent) : Context(parent) {
     this->updateGame = true;
     auto fs = assets->getFontSize();
     auto lineAmount = LOG_HEIGHT / fs;
-    this->logs = new CircularBuffer<std::string>(lineAmount);
+    this->logs = new CircularBuffer<std::string>(lineAmount);    
 }
+
+// void MainPanel::setupInfo() {
+//     auto player = game->getPlayer();
+//     this->nameLabelTex = assets->getMessage("Name:  ");
+//     this->nameTex = assets->getMessage(player->getName(), SDL_Color{0, 200, 0, 0});
+//     this->classLabelTex = assets->getMessage("Class: ");
+//     this->classTex = assets->getMessage(player->getClassName());
+// }
 
 MainPanel::~MainPanel() {
     // delete iContext;
     delete commandLine;
+    // SDL_DestroyTexture(nameLabelTex);
+    // SDL_DestroyTexture(nameTex);
+    // SDL_DestroyTexture(classLabelTex);
+    // SDL_DestroyTexture(classTex);
 }
 
 void MainPanel::clearFocused() {
@@ -95,8 +109,31 @@ void MainPanel::drawPlayer() {
 }
 
 void MainPanel::drawInfo() {
+    auto x = this->tileCountX * TILE_WIDTH;
+    auto y = 0;
     auto bg = assets->getInfoBG();
-    this->parent->drawTexture(bg, this->tileCountX * TILE_WIDTH, 0);
+    this->parent->drawTexture(bg, x, y);
+
+    // draw name
+    // parent->drawTexture(nameLabelTex, x + 10, y + 10);
+    // draw class name
+    // draw health and mana
+    auto player = game->getPlayer();
+    int xOffset = 10;
+    int yOffset = 10;
+    auto size = getSize(bg);
+    auto barWidth = size.x - 2 * xOffset;
+    auto barHeight = 30;
+
+    parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{255, 200, 200, 0}, false);
+    auto health = (barWidth - 2) * player->getCurrentHealth() / player->getMaxHealth();
+    parent->drawRect(x + xOffset + 1, y + yOffset + 1, health, barHeight - 2, SDL_Color{255, 0, 0, 0}, true);
+
+    y += 40;
+
+    parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{255, 200, 200, 0}, false);
+    auto mana = (barWidth - 2) * player->getCurrentMana() / player->getMaxMana();
+    parent->drawRect(x + xOffset + 1, y + yOffset + 1, mana, barHeight - 2, SDL_Color{0, 0, 255, 0}, true);
 }
 
 void MainPanel::toggleFullscreen() {
@@ -193,7 +230,10 @@ void MainPanel::inventoryMode() {
 }
 
 void MainPanel::spellCastMode() {
-    // TODO
+    std::string line = "SELF HEAL LOW";
+    auto spell = game::spells::parse(game, line);
+    spell->cast(this->game);
+    delete spell;
 }
 
 void MainPanel::consoleCommandMode() {
