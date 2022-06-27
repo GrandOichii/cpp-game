@@ -136,7 +136,8 @@ const std::map<string, func> FUNC_MAP = {
         auto looted = so->getGame()->accessContainer(container, top);
         so->set(formatted, new SInt(looted ? 1 : 0));
         if (!looted) return;
-        so->getGame()->getPlayer()->getInventory()->addAll(container->getPairs());
+        auto player = so->getGame()->getPlayer();
+        player->getInventory()->addAll(container->getPairs());
     } },
     { "if", [](ScriptOverseer* so, SObject** args, int argc) {
         vector<string> argv;

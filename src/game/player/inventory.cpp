@@ -4,12 +4,14 @@
 #include <map>
 #include <vector>
 
+#include "player.hpp"
 #include "../items/item.hpp"
 
 namespace game {
 namespace player {
 
 void Inventory::add(items::Item* item) {
+    // if (item.)
     this->add(item, 1);
 }
 
@@ -24,6 +26,7 @@ void Inventory::add(items::Item* item, int amount) {
 }
 
 void Inventory::take(items::Item* item) {
+    std::cout << "Taking " << item->getName() << std::endl;
     if (!item->canTake()) throw std::runtime_error("can't take item " + item->getName());
     for (auto& pair : items) {
         if (pair.first == item) {
@@ -48,6 +51,7 @@ siMap Inventory::getSorted() {
         auto item = pair.first;
         int amount = pair.second;
         if (item->isStackable()) {
+            if (amount == 0) continue;
             auto s = new ItemStruct{item, amount};
             it->second.push_back(s);
             result["All"].push_back(s);

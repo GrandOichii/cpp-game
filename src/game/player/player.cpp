@@ -115,5 +115,13 @@ int Player::getCurrentMana() {
     return 10;
 }
 
+int Player::getCurrency() {
+    return currency;
+}
+
+void Player::addCurrency(int value) {
+    currency += value;
+}
+
 }
 }

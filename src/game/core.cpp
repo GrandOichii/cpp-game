@@ -56,11 +56,14 @@ std::string Game::createPlayer(std::string savesDir, std::string name, std::stri
             pc = classes[i];
     if (!pc) throw std::runtime_error("no class with name " + className);
     this->player = new player::Player(name, pc);
+    // TODO delete
+    this->scriptOverseer->bindPlayer(this->player);
     return "";
 }
 
 void Game::loadPlayer(std::string saveFile) {
-    
+    // load the player info
+    this->scriptOverseer->bindPlayer(this->player);
 }
 
 items::ItemManager* Game::getItemManager() {

@@ -16,6 +16,12 @@ namespace game {
 
 class Game;
 
+namespace player {
+
+class Player;
+
+}
+
 namespace scripting {
 
 class Script;
@@ -25,7 +31,7 @@ private:
     Game *game;
     std::map<string, Script*> macros;
     std::map<string, SObject*> vars;
-    std::map<string, std::function<SObject*()>> immutableVars;
+    std::map<string, SObject*> immutableVars;
 public:
     ScriptOverseer(Game * game);
     ~ScriptOverseer();
@@ -37,6 +43,7 @@ public:
     void addMacro(std::string name, Script * macro);
     Script * getMacro(std::string name);
     SObject * get(std::string key);
+    void bindPlayer(player::Player * player);
 };
 
 }

@@ -5,7 +5,6 @@
 namespace game {
 namespace items {
 
-
 bool Item::isStackable() { return stackable; }
 string Item::getName() { return name; }
 string Item::getDisplayName() { return displayName; }
@@ -36,9 +35,10 @@ int Item::getOperations() { return CLOSE_OPERATION; }
 void Item::setKnown(bool value) { this->known = value; }
 bool Item::isKnown() { return known; }
 
-BasicItem::BasicItem(json j) : Item(j, false, true) {}
+BasicItem::BasicItem(json j) : Item(j, true, true) {}
 string BasicItem::category() { return "Other"; }
 string BasicItem::additionalDescriptionInfo() { return ""; }
+
 
 AmmoItem::AmmoItem(json j) : Item(j, true, true) {
     this->damage = j["damage"];
@@ -147,8 +147,23 @@ int UsableItem::getOperations() {
     return USE_OPERATION | CLOSE_OPERATION;
 }
 
-IncantationBookItem::IncantationBookItem(json j) : UsableItem(j, false) {
+CurrencyItem::CurrencyItem(json j) : UsableItem(j, true) {
+    this->amount = j["amount"];
+}
 
+string CurrencyItem::category() { return "Other"; }
+
+string CurrencyItem::additionalDescriptionInfo() { return "Amount: " + std::to_string(amount) + "\n\n"; }
+
+void CurrencyItem::use(Game* game) {
+    auto player = game->getPlayer();
+    player->addCurrency(this->amount);
+    // remove item from inventory
+    player->getInventory()->take(this);
+}
+
+IncantationBookItem::IncantationBookItem(json j) : UsableItem(j, false) {
+    // TODO
 }
 
 void IncantationBookItem::use(Game* game) {

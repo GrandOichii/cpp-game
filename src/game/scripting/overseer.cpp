@@ -3,6 +3,7 @@
 #include "object.hpp"
 #include "script.hpp"
 #include "../core.hpp"
+#include "../player/player.hpp"
 #include "../../util.hpp"
 
 namespace game {
@@ -25,7 +26,7 @@ SObject * ScriptOverseer::get(std::string key) {
     auto it1 = vars.find(key);
     if (it1 != vars.end()) return it1->second;
     auto it2 = immutableVars.find(key);
-    if (it2 != immutableVars.end()) return it2->second();
+    if (it2 != immutableVars.end()) return it2->second;
     throw std::runtime_error("don't know what " + key + " is");
 }
 
@@ -59,7 +60,7 @@ SObject * ScriptOverseer::getValueOf(SRaw * object) {
     }    
     auto it2 = this->immutableVars.find(name);
     if (it2 != this->immutableVars.end()) {
-        return it2->second();
+        return it2->second;
     }
     // check if is warp code
     throw std::runtime_error("overseer doesn't know what " + name + " is");
@@ -75,6 +76,49 @@ Script * ScriptOverseer::getMacro(std::string name) {
     auto it = this->macros.find(name);
     if (it == this->macros.end()) throw std::runtime_error("unknown macro: " + name);
     return it->second;
+}
+
+void ScriptOverseer::bindPlayer(player::Player * player) {
+    this->immutableVars["player.name"] = new SCustom("player.name", [player]() {
+        return player->getName();
+    });
+    this->immutableVars["player.class"] = new SCustom("player.class", [player]() {
+        return player->getClassName();
+    });
+    this->immutableVars["player.currency"] = new SCustom("player.currency", [player]() {
+        return std::to_string(player->getCurrency());
+    },
+    [player](){
+        return player->getCurrency();
+    });
+    this->immutableVars["player.chealth"] = new SCustom("player.chealth", 
+    [player]() {
+        return std::to_string(player->getCurrentHealth());
+    }, 
+    [player]() {
+        return player->getCurrentHealth();
+    });
+    this->immutableVars["player.mhealth"] = new SCustom("player.mhealth", 
+    [player]() {
+        return std::to_string(player->getMaxHealth());
+    }, 
+    [player]() {
+        return player->getMaxHealth();
+    });
+    this->immutableVars["player.cmana"] = new SCustom("player.cmana", 
+    [player]() {
+        return std::to_string(player->getCurrentMana());
+    }, 
+    [player]() {
+        return player->getCurrentMana();
+    });
+    this->immutableVars["player.mmana"] = new SCustom("player.mmana", 
+    [player]() {
+        return std::to_string(player->getMaxMana());
+    }, 
+    [player]() {
+        return player->getMaxMana();
+    });
 }
 
 // void ScriptOverseer::addContainerKey(std::string key) {

@@ -178,6 +178,10 @@ class ItemEditorWindow(QDialog):
                 'label': create_label('INT required for reading:'),
                 'element': create_number_edit(0, gsdk.MAX_ATTRIBUTE)
             },
+            'amount': {
+                'label': create_label('Currency amount:'),
+                'element': create_number_edit(0, gsdk.MAX_CURRENCY)
+            },
             'description': {
                 'label': create_label('Description: '),
                 'element': create_line_edit()
@@ -227,7 +231,7 @@ class ItemEditorWindow(QDialog):
             el = self.elements[incantation]['element']
             split = el.getText_().split(' ')
             for word in split:
-                if not word in values:
+                if word != '' and not word in values:
                     util.show_message_box('Unknown incantation ' + word)
                     return
         # save the item

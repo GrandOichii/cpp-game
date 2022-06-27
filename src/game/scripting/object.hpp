@@ -16,6 +16,7 @@ protected:
 public:
     SObject(std::string raw);
     virtual std::string str() = 0;
+    virtual int digit() = 0;
     virtual std::string getRaw();
     virtual SObject * copy() = 0;
     virtual ~SObject() = default;
@@ -28,6 +29,7 @@ public:
     SInt(int value);
     SObject * copy();
     std::string str();
+    int digit();
     int getValue();
     void setValue(int value);
 };
@@ -40,15 +42,19 @@ public:
     SObject * copy();
     void add(std::string value);
     std::string str();
+    int digit();
 };
 
 class SCustom : public SObject {
 private:
     std::function<std::string(void)> strFunc;
+    std::function<int(void)> digitFunc;
 public:
+    SCustom(std::string name, std::function<std::string(void)> strFunc, std::function<int(void)> digitFunc);
     SCustom(std::string name, std::function<std::string(void)> strFunc);
     SObject * copy();
     std::string str();
+    int digit();
 };
 
 class SRaw : public SObject {
@@ -60,6 +66,7 @@ public:
     std::string get();
     SObject * getObject();
     std::string str();
+    int digit();
 };
 
 }

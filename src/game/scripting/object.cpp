@@ -21,6 +21,10 @@ std::string SInt::str() {
     return std::to_string(value); 
 }
 
+int SInt::digit() {
+    return value;
+}
+
 SObject * SInt::copy() {
     return new SInt(this->value);
 }
@@ -32,7 +36,6 @@ int SInt::getValue() {
 void SInt::setValue(int value) {
     this->value = value;
 }
-
 
 SString::SString(const std::string value) : SObject(value) {
     this->value = value.substr(1, value.size() - 2);
@@ -46,19 +49,39 @@ std::string SString::str() {
     return value; 
 }
 
+int SString::digit() {
+    throw std::runtime_error("cannot convert str to digit");
+}
+
 void SString::add(std::string value) {
     this->value += value;
 }
 
-SCustom::SCustom(std::string name, std::function<std::string(void)> strFunc) : SObject(name), strFunc(strFunc) {
-}
+SCustom::SCustom(std::string name, std::function<std::string(void)> strFunc, std::function<int(void)> digitFunc) : 
+    SObject(name),
+    strFunc(strFunc),
+    digitFunc(digitFunc)
+{}
+
+SCustom::SCustom(std::string name, std::function<std::string(void)> strFunc) : 
+    SObject(name),
+    strFunc(strFunc),
+    digitFunc([](){
+        throw std::runtime_error("int function not defined");
+        return 0;
+    })
+{}
 
 SObject * SCustom::copy() {
     throw std::runtime_error("can't make copy of custom script object");
 }
 
 std::string SCustom::str() {
-    return this->strFunc();
+    return strFunc();
+}
+
+int SCustom::digit() {
+    return digitFunc();
 }
 
 SRaw::SRaw(std::string word, ScriptOverseer * so) : SObject(word), so(so) {
@@ -79,6 +102,10 @@ SObject * SRaw::getObject() {
 
 std::string SRaw::str() {
     return this->getObject()->str();;
+}
+
+int SRaw::digit() {
+    return this->getObject()->digit();
 }
 
 }

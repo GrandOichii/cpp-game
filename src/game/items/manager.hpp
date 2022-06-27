@@ -10,8 +10,6 @@
 namespace game {
 namespace items {
 
-const std::vector<std::string> ITEM_TYPES = {"basic", "ammo", "armor", "ranged_weapons", "melee_weapons"};
-
 template<class T>
 static std::vector<Item*> loadItems(json j, std::string label) {
     if (!j.contains(label)) throw std::runtime_error("can't find items type " + label + " in items");
@@ -48,7 +46,8 @@ public:
         auto mWeapons = loadItems<MeleeWeapon>(j, "meleeWeapons");
         auto rWeapons = loadItems<RangedWeapon>(j, "rangedWeapons");
         auto iBooks = loadItems<IncantationBookItem>(j, "incantationBooks");
-        std::vector<std::vector<Item*>> v{basic, ammo, armor, mWeapons, rWeapons, iBooks};
+        auto cItems = loadItems<CurrencyItem>(j, "currency");
+        std::vector<std::vector<Item*>> v{basic, ammo, armor, mWeapons, rWeapons, iBooks, cItems};
         this->itemCount = 0;
         for (auto const& sv : v) this->itemCount += sv.size();
         this->allItems = new Item*[this->itemCount];

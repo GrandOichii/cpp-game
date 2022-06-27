@@ -18,6 +18,7 @@ class Inventory;
 
 class Player : public entities::Entity {
 private:
+    int currency;
     std::string name;
     std::string className;
     Inventory* inventory;
@@ -38,6 +39,9 @@ public:
     int getCurrentHealth();
     int getMaxMana();
     int getCurrentMana();
+
+    int getCurrency();
+    void addCurrency(int value);
 
 };
 

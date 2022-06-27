@@ -164,5 +164,13 @@
             },
             "slot": "ARMS"
         }
+    ],
+    "currency": [
+        {
+            "name": "c100",
+            "displayName": "A pouch of gold",
+            "description": "A little sack containing 100 gold pieces.",
+            "amount": 100
+        }
     ]
 }

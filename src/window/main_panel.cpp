@@ -123,14 +123,16 @@ void MainPanel::drawInfo() {
     int yOffset = 10;
     auto size = getSize(bg);
     auto barWidth = size.x - 2 * xOffset;
-    auto barHeight = 30;
+    auto barHeight = 20;
 
+    parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{0, 0, 0, 0}, true);
     parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{255, 200, 200, 0}, false);
     auto health = (barWidth - 2) * player->getCurrentHealth() / player->getMaxHealth();
     parent->drawRect(x + xOffset + 1, y + yOffset + 1, health, barHeight - 2, SDL_Color{255, 0, 0, 0}, true);
 
-    y += 40;
+    y += barHeight * 1.5;
 
+    parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{0, 0, 0, 0}, true);
     parent->drawRect(x + xOffset, y + yOffset, barWidth, barHeight, SDL_Color{255, 200, 200, 0}, false);
     auto mana = (barWidth - 2) * player->getCurrentMana() / player->getMaxMana();
     parent->drawRect(x + xOffset + 1, y + yOffset + 1, mana, barHeight - 2, SDL_Color{0, 0, 255, 0}, true);
@@ -160,21 +162,21 @@ void MainPanel::handleKey(int key) {
         return;
     }
     switch (key) {
-    case ('f'):
+    case 'f':
         this->toggleFullscreen();
         return;
-    case ('e'):
+    case 'e':
         this->interactMode();
         return;
-    case ('i'):
+    case 'i':
         this->inventoryMode();
         // change if item usage makes the game update
         return;
-    case ('c'):
+    case 'c':
         this->spellCastMode();
         // change if casting spells makes the game update
         return;
-    case ('/'):
+    case '/':
         this->consoleCommandMode();
         return;
     case (SDLK_ESCAPE):
@@ -223,7 +225,6 @@ void MainPanel::interactMode() {
 }
 
 void MainPanel::inventoryMode() {
-    // TODO
     auto w = new InventoryWindow(this->parent, this->assets, this->game);
     w->start();
     delete w;

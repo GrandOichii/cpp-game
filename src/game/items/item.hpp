@@ -131,13 +131,22 @@ public:
     int getOperations() override;
 };
 
+class CurrencyItem : public UsableItem {
+    int amount;
+public:
+    CurrencyItem(json j);
+    void use(Game* game) override;
+    string category() override;
+    string additionalDescriptionInfo() override;
+};
+
 class IncantationBookItem : public UsableItem {
 private:
 public:
     IncantationBookItem(json j);
-    void use(Game* game);
-    string category();
-    string additionalDescriptionInfo();
+    void use(Game* game) override;
+    string category() override;
+    string additionalDescriptionInfo() override;
 
 };
 

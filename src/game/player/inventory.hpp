@@ -11,6 +11,8 @@
 namespace game {
 namespace player {
 
+class Player;
+
 struct ItemStruct {
     items::Item* item;
     int amount;
@@ -21,6 +23,7 @@ using siMap = std::map<std::string, ipVector>;
 
 class Inventory {
 private:
+    Player* owner;
     std::vector<std::pair<items::Item*, int>> items;
 public:
     void add(items::Item* item);

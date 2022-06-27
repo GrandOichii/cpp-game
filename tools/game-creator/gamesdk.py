@@ -207,13 +207,16 @@ MAX_RANGE = 20
 
 MAX_ATTRIBUTE = 50
 
+MAX_CURRENCY = 10000
+
 ITEM_TYPES = [
     'basic',
     'melee weapon',
     'ranged weapon',
     'ammo',
     'armor',
-    'incantation book'
+    'incantation book',
+    'currency item'
     # ADD ITEM TYPE HERE
 ]
 
@@ -252,7 +255,8 @@ ITEM_TYPE_KEYS = {
     'melee weapon': BASE_KEYS + ['damageType', 'minDamage', 'maxDamage', 'range', 'STR', 'AGI', 'INT', 'slot'],
     'ranged weapon': BASE_KEYS + ['minDamage', 'maxDamage', 'range', 'STR', 'AGI', 'INT', 'slot', 'ammoType'],
     'armor': BASE_KEYS + ['armorRating', 'STR', 'AGI', 'INT', 'slot'],
-    'incantation book': BASE_KEYS + ['intRequirement'] + list(INCANTATIONS.keys())
+    'incantation book': BASE_KEYS + ['intRequirement'] + list(INCANTATIONS.keys()),
+    'currency item': BASE_KEYS + ['amount']
     # ADD ITEM TYPE HERE
 }
 
@@ -272,7 +276,8 @@ NUMBER_KEYS = [
     'damage',
     'range',
     'intRequirement',
-    'armorRating'
+    'armorRating',
+    'amount'
     # ADD ITEM TYPES HERE
 ]
 
@@ -559,6 +564,7 @@ class GameObject:
             result.items += extract_items('incantation book', data['incantationBooks'])
             result.items += extract_items('ranged weapon', data['rangedWeapons'])
             result.items += extract_items('melee weapon', data['meleeWeapons'])
+            result.items += extract_items('currency item', data['currency'])
             # ADD ITEM TYPES HERE
         # load the containers
         with open(os.path.join(path, CONTAINERS_FILE), 'r') as f:
@@ -655,15 +661,17 @@ class GameObject:
             data['armor'] = []
             data['rangedWeapons'] = []
             data['meleeWeapons'] = []
+            data['currency'] = []
+            # ADD ITEM TYPES HERE
             m = {
                 'basic': data['basic'],
                 'ammo': data['ammo'],
                 'melee weapon': data['meleeWeapons'],
                 'ranged weapon': data['rangedWeapons'],
                 'armor': data['armor'],
-                'incantation book': data['incantationBooks']
+                'incantation book': data['incantationBooks'],
+                'currency item': data['currency']
             }
-            # ADD ITEM TYPES HERE
             for item in self.items:
                 m[item.selected_type] += [item.to_json()]
             f.write(json.dumps(data, indent=4))
